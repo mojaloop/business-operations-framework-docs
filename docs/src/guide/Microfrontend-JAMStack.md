@@ -1,6 +1,6 @@
 # Micro-frontend - JAMStack design
 ## Overview
-Overview Diagram showing the deployment of the micro frontends to a CDN.<br>
+Overview Diagram showing the deployment of the micro frontends to a CDN.
 ::: warning Note:
 The deployment of the bounded context API is not covered in this diagram.
 :::
@@ -12,40 +12,32 @@ The deployment of the bounded context API is not covered in this diagram.
 ## Technology Stack
 
 
-1. **React** <br>
-The framework is based on the React library.<br>
-This is the most popular single page application library in use, and additionally this choice allows us to capitalise on other community efforts facilitating an easy conversion into this library.<br>
-<br>
-It can be enhanced by using state container libraries (Redux, Flux, MobX), however there is no restriction on a specific one to use.<br>
-<br>
+1. **React** 
+The framework is based on the React library.
+This is the most popular single page application library in use, and additionally this choice allows us to capitalise on other community efforts facilitating an easy conversion into this library.
+It can be enhanced by using state container libraries (Redux, Flux, MobX), however there is no restriction on a specific one to use.
 The microfrontends come with preconfigured, isolated Redux stores.
 
-2. **Webpack 5** <br>
-Webpack 5 is currently the only javascript bundler that supports remote build separation. It is done by using the Module Federation Plugin.<br>
-<br>
-It enables runtime composition to provide a smooth and fully transparent user experience to the users, resulting in a traditional Single Page Application.<br>
-<br>
-There are additional benefits over other technologies, all that resulting in a small footprint and overall better experience for the users.<br>
-<br>
-Will Implement the host / child micro frontends integration at runtime.<br>
+2. **Webpack 5** 
+Webpack 5 is currently the only javascript bundler that supports remote build separation. It is done by using the Module Federation Plugin.
+It enables runtime composition to provide a smooth and fully transparent user experience to the users, resulting in a traditional Single Page Application.
+There are additional benefits over other technologies, all that resulting in a small footprint and overall better experience for the users.
+Will Implement the host / child micro frontends integration at runtime.
 
-3. **CI/CD and Atomic Deployments** (e.g. Github Actions) <br>
-Each implementation of the BizOps Framework will need to implement their own atomic deployment solution.<br>
+3. **CI/CD and Atomic Deployments** (e.g. Github Actions) 
+Each implementation of the BizOps Framework will need to implement their own atomic deployment solution.
 The standard BizOps project will use Github Actions to perform the task of executing continuous integration pipeline, running the relevant tests, building the individual micro frontend and deploying the resulting static files over a CDN and/or creating a Docker Image.
-<br>
-Each micro frontend is released in complete autonomy: the composed application can use the updated versions of each individual micro frontend automatically, without involving any further coordination.<br>
+Each micro frontend is released in complete autonomy: the composed application can use the updated versions of each individual micro frontend automatically, without involving any further coordination.
 
-4. **Running on a CDN** - Content Delivery Network <br>
+4. **Running on a CDN** - Content Delivery Network 
 The micro frontends can run on a CDN. Individual builds are composed of only static files (HTML, CSS, Javascript) and can be deployed in different locations / different URLs.
-<br>
 As long as they are available over a secure connection (HTTPS) they can be served from any location and also from different CDNs.
-<br>
 
-5. **Running in Kubernetes** <br>
+5. **Running in Kubernetes** 
 The micro frontends can run in a Kubernetes environment. There are two approaches that can be taken here:
-   - The individual micro frontends, and the shell application are containerized (using e.g. Docker) and then hosted in Kubernetes.<br>
+   - The individual micro frontends, and the shell application are containerized (using e.g. Docker) and then hosted in Kubernetes.
 The host and the children apps can be deployed on the same cluster or on different clusters as long as they are publicly accessible.
-   - Deploy a private CDN into the Kubernetes cluster, and host the static markup files on the CDN.<br>
+   - Deploy a private CDN into the Kubernetes cluster, and host the static markup files on the CDN.
 There are various CDNs available that are compatible with Kubernetes.
 
 ## Webpack building

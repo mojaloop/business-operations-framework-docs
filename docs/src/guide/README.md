@@ -15,10 +15,10 @@ Three levels or degrees of control are required when configuring the best practi
 ### Reference Architecture
 The reference architecture workstream has through a collaborative process designed the future / next version architecture of Mojaloop. The BizOps Framework is being designed to work on the current existing Mojaloop version. The BizOps Framework must however be compatible with the reference architecture, and wherever possible, facilitate the move towards the reference architecture design.
 There are three elements in BizOps framework project that are directly contributing to the reference architecture building:
-Security bounded context.
+1. **Security bounded context.**
 Part of this bounded context is being built as part of this workstream.
 The split of the frontend into micro-frontends that can be built, tested and released independently; empowering teams building solutions within each bounded context to be able to independently build API functionality and corresponding UI. Customisations and extensions to each bounded context are also easily supported with this design.
-Reporting and auditing bounded context.
+2. **Reporting and auditing bounded context.**
 Part of this bounded context is being built as part of this workstream.
 
 Here is an overall view of how the operational APIs, experience APIs, and micro-front ends can be combined into micro frontends forming the BizOps framework.

@@ -18,7 +18,7 @@ module.exports = {
     html:         true,        // Enable HTML tags in source
     xhtmlOut:     false,        // Use '/' to close single tags (<br />).
                                 // This is only for full CommonMark compatibility.
-    breaks:       true,        // Convert '\n' in paragraphs into <br>
+    breaks:       true,        // Convert '\n' in paragraphs into 
     langPrefix:   'language-',  // CSS language prefix for fenced blocks. Can be
                                 // useful for external highlighters.
     // linkify:      false,        // Autoconvert URL-like text to links

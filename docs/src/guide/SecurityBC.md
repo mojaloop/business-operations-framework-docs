@@ -3,13 +3,13 @@ todo: need an introduction here
 
 
 ## Tools / standards chosen
-1. **Ory Oathkeeper** <br>
+1. **Ory Oathkeeper** 
 Will be used as the Identity and Access Proxy (IAP) that will check authentication and authorization before providing access to functional end points. I.e. it will be used to enforce the access control.
-2. **Ory Keto** <br>
+2. **Ory Keto** 
 Will check authorization via subject-role and role-permission mappings. It uses a flexible object, relationship and subject structure pioneered at Google that can model many authorization schemes, including RBAC.
-3. **Ory Kratos** <br>
+3. **Ory Kratos** 
 Will use Ory Kratos to create and manage the cookie authorization object.
-4. **OpenID Connect** <br>
+4. **OpenID Connect** 
 Is the standard that has been chosen to interact with an identity management system. This is a widely supported standard, and is compatible with all the tools currently in use in the Mojaloop community. I.e. WS02 IS, Keycloak and Ory Kratos
 
 ## Overview Architecture
@@ -17,63 +17,66 @@ Is the standard that has been chosen to interact with an identity management sys
 ![Architecture Overview Diagram of Security Bounded Context Implementation](/BizOps-Framework-IaC-3.xx-&-Mojaloop-13.xx.png)  
 
 ## Tools Services and the roles they are playing
-1. **WS02 IS KM**<br>
-**owns:** the users<br>
-**Implements:** user login redirection and UI that creates the cookie token<br>
+1. **WS02 IS KM**
+**owns:** the users
+**Implements:** user login redirection and UI that creates the cookie token
 **Implements:** standard OIDC authorization code flow
-2. **Ory Keto**<br>
-**owns:** the roles mapped to users<br>
-**represents:** the permissions mapped to roles<br>
-**owns:** the participant mapped to users<br>
-**Implements:** API RBAC Authorisation check through Oathkeeper<br>
+
+2. **Ory Keto**
+**owns:** the roles mapped to users
+**represents:** the permissions mapped to roles
+**owns:** the participant mapped to users
+**Implements:** API RBAC Authorisation check through Oathkeeper
 **Implements:** API ABAC Authorisation check through Operational API call
-3. **Ory Oathkeeper**<br>
-**owns:** the permissions related to API access<br>
-**Implements:** API Gateway for operational APIs with authentication and authorization checks<br>
-4. **Ory Kratos**<br>
-**Owns:** nothing<br>
-**Implements:** Authentication Cookie<br>
-5. **BC Operational API -**<br>
-**owns:** the permissions related to the operational API calls<br>
+3. **Ory Oathkeeper**
+**owns:** the permissions related to API access
+**Implements:** API Gateway for operational APIs with authentication and authorization checks
+4. **Ory Kratos**
+**Owns:** nothing
+**Implements:** Authentication Cookie
+5. **BC Operational API -**
+**owns:** the permissions related to the operational API calls
 **Implements:** operational API functions
-6. **Shim**<br>
-**Owns:** nothing<br>
-**Implements:** redirect to configure OIDC<br>
-7. **Operator Role + Kubernetes role-resource file**<br>
-**Operator Role Owns:** nothing<br>
-**Role-resource file Owns:** the roles and the role-permission assignments<br>
-**Implements:** update Keto to reflect role-permission assignment changes made in the role-resource file<br>
-8. **User Role API**<br>
-**Owns:** nothing<br>
-**Implements:** role-user API controls (list of users, list of roles, list of roles assigned to users, add role to user, remove role from user.)<br>
-**Implements:** participant-user API controls (list of users, list of participants, list of participants assigned to user, add participant to user, remove participant from user.)<br>
+6. **Shim**
+**Owns:** nothing
+**Implements:** redirect to configure OIDC
+7. **Operator Role + Kubernetes role-resource file**
+**Operator Role Owns:** nothing
+**Role-resource file Owns:** the roles and the role-permission assignments
+**Implements:** update Keto to reflect role-permission assignment changes made in the role-resource file
+8. **User Role API**
+**Owns:** nothing
+**Implements:** role-user API controls (list of users, list of roles, list of roles assigned to users, add role to user, remove role from user.)
+**Implements:** participant-user API controls (list of users, list of participants, list of participants assigned to user, add participant to user, remove participant from user.)
 
 ## Alignment to the Reference Architecture
 ![Overview Diagram illustrating the alignment to the Reference Architecture](/BizOps-Framework-Security-BC.png) 
 
 ### Functions Implemented
 This implmentation of the security BC takes advantage of standard security tools available. In the case where a reference architecture function is alrealy implemented by the chosen standard tool, then it was decided to use that tools function. Where that was done, a mention to the appropriate tool is made.
-1. **Create Users / Apps / Groups** <br>
+1. **Create Users / Apps / Groups** 
 The create of users, groups and application identity accounts should be done directly in the chosen Identity and Key Management solution being used. In the IaC 3.xx version deployment of Mojaloop, this is the WS02 IS KM module.
-2. **Login** <br>
+2. **Login** 
 A cookie based authentication token has been implemented, and this funcitonallity is performed by both Ory Kratos (who manages the cookie) and the Identity & Key Management system (who create the authentication token).
 
-3. **Assign Users / Apps / Groups to Roles** <br>
+3. **Assign Users / Apps / Groups to Roles** 
 The assignment of user, group and app identity accounts to roles is performed by the backend Role-Api, (who make the relevent changes to Keto).
-4. **Create Roles & Assign Privileges to Roles** <br>
+4. **Create Roles & Assign Privileges to Roles** 
 The assignment of permissions or privileges to roles is performed by change the roleresource.yml files. A version control system e.g. github, is the control mechanism for changes made to this file. Change to the file are uploaded to keto via the kubernetes role operator.
 ### Functions not Implemented
-1. **Communicate Permissions/Privileges** by each BC on startup.<br>
+1. **Communicate Permissions/Privileges** by each BC on startup.
 This is not implemented
-2. **BC Login**<br>
+
+2. **BC Login**
 This refers to the logging in of each bounded context as they startup. Current no bounded context have implemented this functionallity, so this requirement has not been implemented either.
-3. **BC setup callback**<br>
+3. **BC setup callback**
 There is no requirement for this if each BC doesn't login. This has not been implemented.
 
 ### Additional functionallity added
-1. **BC verify claim** <br>
-By this we are refering to the ability of a Bounded Context that is implementing an Operational API to be able to query if the provided token has authorisation to a defined permission or privilege.<br>
+1. **BC verify claim** 
+By this we are refering to the ability of a Bounded Context that is implementing an Operational API to be able to query if the provided token has authorisation to a defined permission or privilege.
 This was not a requirement specified by the reference architecture, however it was a requirement to fulfill the generic reporting BC API. This functionallity has been made available and is implemented using a standard Keto API.
+
 2. **Assignment of Participant access**
 In order to implementent external API's to participant DFSPs, an aditional permission assignment was added where participant access is added to identity accounts. This has been implemented in Keto and maintained through the User-Role API. Checking access is through a standard Keto API call.
 
@@ -115,9 +118,10 @@ spec:
 ```
 ## Ory Keto - implemention detail
 Ory Keto in this design is the tool that implements the logic of whether a login token has the correct authorisation to access an aspect of the system. I.e. it is use to enforce the RBAC (Role Based Access  Control). There are three part to how this is implemented in Keto:
-1. The assignment of roles to users.<br>
+1. The assignment of roles to users.
 This functionallity will be maintained and updated from the Role-User API module; which will call and update Keto accordingly.
-2. Tha assignment of participant access to a user. <br>
+
+2. The assignment of participant access to a user. 
 This refers to the DFSP access reports that must only provide reports for the configured participants.
 This functionallity will also be maintained via the Role-User API module; which will call and update Keto accordingly. 
 3. The assignment of permissions or privileges to roles. This will be controled through the edits of a github roleresource.yml file. The kubernetes role-permission operator is the service that will monitor these roleresource files, and update Keto to affect the assignments.

@@ -8,19 +8,19 @@ Here is the overall architectural design.
 In Mojaloop, all the core services are already pushing events to kafka on a topic ‘topic-event’.
 
 There are two fundamental reporting databases
-1. **Reporting DB** <br>
-The reporting database is a relational database that keep track of the latest state of the Mojaloop ojects and makes them available through and efficenty query interface. <br>
+1. **Reporting DB** 
+The reporting database is a relational database that keep track of the latest state of the Mojaloop ojects and makes them available through and efficenty query interface. 
 In the implementation of this workstream effort, a reporting dedicated replica of the central ledger database will be used. This doesn't quite fit the architectural model as a database owned by the reporting and auditing bounded context should not have external depencencies. A central ledger replica data is dependent on the schema of the central ledger and therefor has an external dependency. 
 ::: warning Technical Debt
 This should be recognised as **technical debt** that should be paid as more of the reference architecture is built. 
 :::
 There are two approaches that can be take in paying this technical debt:
-   - Changing the replica call to a **oneway data sync** function; which would decouple the schemas of the two databases.
-   - Rebuild a new designed **relational database** which is updated based on subscribed kafka topics.
-The best approach will depend on the state of the current Mojaloop version at the time that this debt is paid.<br><br>
-2. **Event DB Store** <br>
-The event DB store is a capture of the event details that can provided a more detailed reporting view of what happenned. <br>  
-  **Limitations of the event store effort in this workstream**<br>
+  - Changing the replica call to a **oneway data sync** function; which would decouple the schemas of the two databases.
+  - Rebuild a new designed **relational database** which is updated based on subscribed kafka topics.
+The best approach will depend on the state of the current Mojaloop version at the time that this debt is paid.
+2. **Event DB Store** 
+The event DB store is a capture of the event details that can provided a more detailed reporting view of what happenned.   
+  **Limitations of the event store effort in this workstream**
 This design will be implemented on the current Mojaloop version. 
 Currently only the data required to provide end to end tracing of a transfer will be collected and made available through the reporting API.
 Extensions to this offering can easily be added by extending the event processor to process new use case messages and store them in the Mongo DB, and then configure the generic graphQL resource query to query the new data stores appropriately.
@@ -44,7 +44,7 @@ So that I can proactively monitor the health of the ecosystem.
 
 2. **Transfer list view use case**
 As a Hub Operator Business Operations Specialist,
-I want to view a list of transactions that can be filtered based on one or more of the following <br>
+I want to view a list of transactions that can be filtered based on one or more of the following 
 Always required (must be provided in every call)
 - Date time range
 Optional filters 
@@ -187,6 +187,7 @@ The trace data gives us more information on which service created the events.
 | qs_quote_forwardQuoteGet |
 | qs_quote_sendErrorCallback |
 
+
 | metadata.trace.service |
 | ---- |
 | qs_bulkquote_forwardBulkQuoteRequest |
@@ -194,6 +195,7 @@ The trace data gives us more information on which service created the events.
 | qs_quote_forwardBulkQuoteGet |
 | qs_quote_forwardBulkQuoteError |
 | qs_bulkQuote_sendErrorCallback |
+
 
 | metadata.trace.service |
 | ---- |
@@ -212,6 +214,7 @@ The trace data gives us more information on which service created the events.
 | cs_process_transfer_settlement_window |
 | cs_close_settlement_window |
 | ... |
+
 
 | metadata.trace.service |
 | ---- |
@@ -246,12 +249,14 @@ The trace data gives us more information on which service created the events.
 | PartiesSubIdByTypeAndIDPut |
 | PartiesErrorBySubIdTypeAndIDPut |
 
+
 | metadata.trace.service |
 | ---- |
 | OraclesGet |
 | OraclesPost |
 | OraclesByIdPut |
 | OraclesByIdDelete |
+
 
 | metadata.trace.service |
 | ---- |
@@ -269,6 +274,7 @@ The trace data gives us more information on which service created the events.
 | AuthorizationsIDResponse |
 | AuthorizationsIDPutResponse |
 | AuthorizationsErrorByID |
+
 
 | metadata.trace.service |
 | ----- |
@@ -296,7 +302,7 @@ Additional customization
 See [reference config.](https://github.com/cloudhut/kowl/blob/master/docs/config/kowl.yaml)
 
 #### TTK golden path
-The TTK golden path test cases have been design to explore all the possible test outcomes possible when sending transfers. This is therefore and important tool that can be used to test that the functionallity caters for all eventualities. <br>
+The TTK golden path test cases have been design to explore all the possible test outcomes possible when sending transfers. This is therefore and important tool that can be used to test that the functionallity caters for all eventualities. 
 I.e. We can use the inbuilt TTK to execute different test-cases like p2p happy path, negative scenarios, settlement related use cases...etc
 
 ## Event Processing Service
