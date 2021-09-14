@@ -1,0 +1,33 @@
+@startuml
+
+actor User as user
+participant "Client Browser" as browser
+participant "Shell application CDN" as shell
+participant "Security BC" as securitybc
+participant "Micro-Frontend CDN" as mfrontend 
+participant "API Gateway" as apigateway
+participant "BC Operational API" as api
+
+user -> browser : visits
+browser -> shell : request
+browser <- shell : download
+group user logs in
+  browser -> securitybc: redirect to IAM
+  browser <- securitybc: downloads cookie token
+end 
+user -> browser : navigates to micro-frontend
+group runtime loading of micro-frontend
+browser -> mfrontend : request
+browser <- mfrontend : download
+end
+user --> browser : perform function / query data
+browser -> apigateway: micro-frontend calls bounded context API
+apigateway <-> securitybc: introspect access token
+apigateway <-> securitybc: RBAC authorisation
+apigateway -> api: call forwarded
+api <-> securitybc: ABAC authorisation
+
+
+browser <- api: return results to display
+browser -> user: displays results
+@enduml

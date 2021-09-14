@@ -1,0 +1,12 @@
+apiVersion: "mojaloop.io/v1"
+kind: MojaloopRole
+metadata:
+  name: arbitrary-name-here
+spec:
+  # must match what it is used in Keto, whatever that is
+  role: RoleIdentifier
+  permissions:
+  - permission_01
+  - permission_02
+  - permission_03
+  - permission_04

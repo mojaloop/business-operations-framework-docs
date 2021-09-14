@@ -1,0 +1,40 @@
+@startuml
+
+actor Client as client
+participant "Identity & Key Management" as wso2
+boundary "Ory Oathkeeper" as oathkeeper
+participant "Ory Keto" as keto
+participant "BC Operational API" as backend 
+
+
+client -> oathkeeper : request graphql api
+oathkeeper -> wso2 : introspect token
+alt valid bearer token
+  wso2 -> oathkeeper : returns subject + claims
+  oathkeeper -> keto : verify subject permission on API
+  alt authorized
+    keto -> oathkeeper : authorized
+    oathkeeper -> backend : forward request
+    backend -> keto : check permissions for requested resources
+    alt has permissions on resources
+      keto -> backend : authorized
+      backend -> oathkeeper : respond
+      oathkeeper -> client : respond
+    else does not have permissions on resources
+      keto -> backend : not authorized
+      backend -> oathkeeper : 403
+      oathkeeper -> client : 403
+    end
+  else not authorized
+    keto -> oathkeeper : unauthorized
+    oathkeeper -> client : 403
+  end
+else no valid bearer token
+  wso2 -> oathkeeper : nope
+  oathkeeper -> client : 401
+  client -> wso2 : client credentials grant
+  wso2 -> client : access token
+  client -> oathkeeper : request graphql api
+  note right: now we're back at the top
+end
+@enduml

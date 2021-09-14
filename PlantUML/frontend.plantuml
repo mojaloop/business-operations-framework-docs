@@ -1,0 +1,41 @@
+@startuml
+
+actor Browser as user
+participant "BizOps Frontend" as frontend
+participant "Ory Kratos" as kratos
+participant "Identity & Key Management" as wso2
+boundary "Ory Oathkeeper" as oathkeeper
+participant "Ory Keto" as keto
+participant "BC Operational API" as backend 
+
+user -> frontend : visits
+frontend -> kratos : checks cookie
+
+alt already logged in
+  kratos -> frontend : 200 and whoami
+  frontend -> oathkeeper : some request
+  oathkeeper -> kratos : verify cookie
+  kratos -> oathkeeper : returns subject
+  oathkeeper -> keto : verify subject permission on API
+  keto -> oathkeeper : authorized
+  oathkeeper -> backend : forward request
+  backend -> oathkeeper : respond
+  oathkeeper -> frontend : respond
+  frontend -> user : display
+else not logged in
+  kratos -> frontend : 401
+  frontend -> user : redirect to kratos login
+  user -> kratos : request login
+  group standard OIDC authorization code flow
+    kratos -> user : redirect to configured OIDC login
+    note right: via shim
+    user -> wso2 : actual login
+    wso2 -> user : redirect to kratos
+    user -> kratos : request login finish
+    kratos -> wso2 : retrieve identity info
+    kratos -> user : set cookie and redirect to frontend
+    user -> frontend : visits
+    note right: now we're back at the top
+  end
+end
+@enduml

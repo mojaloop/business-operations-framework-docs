@@ -1,0 +1,50 @@
+@startuml
+
+actor Browser as user
+participant "User Role Management" as frontend
+participant "User Role API" as backend 
+participant "Identity & Key Management" as wso2
+participant "Admin API" as adminAPI
+participant "Ory Keto" as keto
+
+user -> frontend : visits
+frontend -> backend : request user list
+backend -> wso2 : request user list
+wso2 -> backend : user list
+backend -> frontend : user list
+frontend -> user : display user list
+
+user -> frontend : select user
+frontend -> backend : retrieve user roles
+backend -> keto : look up user roles
+keto -> backend : user roles
+backend -> frontend : user roles
+
+frontend -> user : display user roles
+user -> frontend : add/remove role for user
+frontend -> backend : add/remove role for user
+backend -> keto : store/delete user-role tuple
+keto -> backend : success
+backend -> frontend : success
+frontend -> user : display updated user roles
+
+user -> frontend : visits
+frontend -> backend : request participant list
+backend -> adminAPI : query participant list
+adminAPI -> backend : participant list
+backend -> frontend : participant list
+frontend -> user : display participant list
+
+user -> frontend : select user
+frontend -> backend : retrieve user participant mapping
+backend -> keto : look up user participant mapping
+keto -> backend : user participant mapping
+backend -> frontend : user participant mapping
+
+user -> frontend : add/remove participant mapping for user
+frontend -> backend : add/remove participant for mapping user
+backend -> keto : store/delete user-participant tuple
+keto -> backend : success
+backend -> frontend : success
+frontend -> user : display updated user participant mapping 
+@enduml

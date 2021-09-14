@@ -1,0 +1,18 @@
+@startuml
+
+actor "Kubernetes Resource Author" as user
+participant "Role Resource" as resource
+participant Kubernetes as kubernetes
+participant "Role Permission Operator" as operator
+participant Keto as keto
+
+user -> resource : modifies Role resource
+note right: there is one or more Role resources per role
+kubernetes -> operator : notifies of change in resource
+operator -> resource : reads resource
+operator -> keto : updates role-permission tuples
+note left: based on contents of all Role resources
+@enduml
+
+
+
