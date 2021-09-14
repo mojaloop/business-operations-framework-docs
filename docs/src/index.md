@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: https://mojaloop.io/wp-content/uploads/2020/07/mojaloop-foundation-orange.svg
+heroImage: /mojaloop_logo_med.png
 tagline: Join the collaboration for building a “get started quickly” set of core business processes that are easy to customise and contribute to open source, and define and follow best practice. 
 actionText: Technical Guide →
 actionLink: /guide/
