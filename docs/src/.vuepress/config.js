@@ -110,5 +110,21 @@ module.exports = {
   plugins: [
     '@vuepress/plugin-back-to-top',
     '@vuepress/plugin-medium-zoom',
-  ]
+      ['container', {
+        type: 'col-wrapper',
+        defaultTitle: '',
+      }],
+      ['container', {
+        type: 'col-full',
+        defaultTitle: '',
+      }],
+      ['container', {
+        type: 'col-half',
+        defaultTitle: '',
+      }],
+      ['container', {
+        type: 'col-third',
+        defaultTitle: '',
+      }],
+    ]
 }

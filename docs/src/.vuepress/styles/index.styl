@@ -23,3 +23,42 @@ p
   color: #000000 !important
   max-width: 720px !important
 
+.custom-block table
+  width auto
+  border 1px solid #ddd
+
+.custom-block th
+  background-color #00a3ff
+  color white
+
+.custom-block
+  &.col-wrapper
+    @media (min-width: 992px)
+      &
+        display flex
+
+  &.col-full
+    width 100%
+
+    @media (min-width: 992px)
+      &
+        flex 0 0 100%
+        max-width 100%
+
+  &.col-half
+    width 100%
+
+    @media (min-width: 992px)
+      &
+        flex 0 0 50%
+        max-width 50%
+
+  &.col-third
+    width 100%
+
+    @media (min-width: 992px)
+      &
+        flex 0 0 33.333333%
+        max-width 33.333333%
+
+    

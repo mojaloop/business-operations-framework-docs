@@ -32,6 +32,7 @@ As a Hub Operator Business Operations Specialist,
 I want a high level dashboard summary of the transactions moving through the hub that is derived from a date time range 
 So that I can proactively monitor the health of the ecosystem.
 
+:::::: col-wrapper
 | Data returned |
 | --- |
 | Transaction count |
@@ -41,6 +42,7 @@ So that I can proactively monitor the health of the ecosystem.
 | Transaction count per payee DFSP |
 | Transaction amount per currency per payer DFSP |
 | Transaction amount per currency per payee DFSP |
+:::::::::
 
 2. **Transfer list view use case**
 As a Hub Operator Business Operations Specialist,
@@ -64,6 +66,7 @@ Search String on messages
 
 ... So that I proactively monitor the health of the ecosystem by having a more detailed view of the transaction data moving through the switch.
 
+:::::: col-wrapper
 | Data returned | |
 | --- | --- |
 | Transfer ID | The unique identifier of the transfer. |
@@ -79,6 +82,7 @@ Search String on messages
 | Payee | |
 | Settlement Batch Id | The unique identifier of the settlement batch in which the transfer was settled. If the transfer has not been settled yet, it is blank. |
 | Date Submitted | The date and time when the transfer was initiated. |
+:::::::::
 
 3. **Transfer detail view use case**
 As a Hub Operator Business Operations Specialist, I want to trace a specific transaction from it’s transaction ID
@@ -88,6 +92,7 @@ As a Hub Operator Business Operations Specialist, I want to trace a specific tra
 - The associated quoting information and timing for that transaction
 - The associated settlement process status and identifiers
 
+:::::: col-wrapper
 | Data returned | |
 | --- | --- |
 | Transfer ID | The unique identifier of the transfer. |
@@ -104,12 +109,14 @@ As a Hub Operator Business Operations Specialist, I want to trace a specific tra
 | Payee Details | The unique identifier of the payer (typically, a MSISDN, that is, a mobile number). |
 | Transfer State | Indicates if the transfer has succeeded, is pending, or an error has occurred. |
 | Date Submitted | The date and time when the transfer was initiated. |
+:::::::::
 
 4. **Transfer message view use case**
 As a Hub Operator Business Operations Specialist, 
 I want to view the detailed messages from it’s transaction ID
 So that I can investigate any unexpected problem associated with that transaction
 
+:::::: col-wrapper
 | Data returned | |
 | --- | --- |
 | Scheme Transfer ID | |
@@ -123,6 +130,7 @@ So that I can investigate any unexpected problem associated with that transactio
 | Transfer Prepare | |
 | Transfer Fulfill | |
 | Error message/s | |
+:::::::::
 
 ## Business work flow
 Here is a business work flow that describes how the use cases are called.
@@ -143,6 +151,8 @@ Here is a more detailed view of the topic-event structure.
 
 #### Event data
 
+:::::: col-wrapper
+::: col-full
 Only audit logs will be stored but there are different event types in the topic-event
 
 | metadata.event.type |
@@ -158,13 +168,18 @@ Events can further be classified by actions
 | egress |
 | *ingress* |
 | *finish* |
-(Italic event.actions not found in audits, yet?)
+*(Italic event.actions not found in audits, yet?)*
+:::
+:::::::::
+
+
 
 #### Trace Data
 The trace data gives us more information on which service created the events. 
 
-##### ml-api-adapter
+**ml-api-adapter**
 
+:::::: col-wrapper
 | metadata.trace.service |
 | ---- |
 | ml_transfer_prepare |
@@ -172,9 +187,12 @@ The trace data gives us more information on which service created the events.
 | ml_transfer_abort |
 | ml_transfer_getById |
 | ml_notification_event |
+:::::::::
 
-##### quoting-service
+**quoting-service**
 
+:::::: col-wrapper
+::: col-third
 | metadata.trace.service |
 | ---- |
 | qs_quote_handleQuoteRequest |
@@ -186,8 +204,9 @@ The trace data gives us more information on which service created the events.
 | qs_quote_handleQuoteError |
 | qs_quote_forwardQuoteGet |
 | qs_quote_sendErrorCallback |
+:::
 
-
+::: col-third
 | metadata.trace.service |
 | ---- |
 | qs_bulkquote_forwardBulkQuoteRequest |
@@ -195,8 +214,9 @@ The trace data gives us more information on which service created the events.
 | qs_quote_forwardBulkQuoteGet |
 | qs_quote_forwardBulkQuoteError |
 | qs_bulkQuote_sendErrorCallback |
+:::
 
-
+::: col-third
 | metadata.trace.service |
 | ---- |
 | QuotesErrorByIDPut |
@@ -207,15 +227,20 @@ The trace data gives us more information on which service created the events.
 | BulkQuotesByIdGet |
 | BulkQuotesByIdPut |
 | BulkQuotesPost |
+:::
+:::::::::
 
-##### central-settlement
+**central-settlement**
+:::::: col-wrapper
+::: col-third
 | metadata.trace.service |
 | ---- |
 | cs_process_transfer_settlement_window |
 | cs_close_settlement_window |
 | ... |
+:::
 
-
+::: col-third
 | metadata.trace.service |
 | ---- |
 | getSettlementWindowsByParams |
@@ -225,8 +250,12 @@ The trace data gives us more information on which service created the events.
 | createSettlement |
 | closeSettlementWindow |
 | ... |
+:::
+:::::::::
 
-##### account-lookup-service (not in PI - included as a reference)
+**account-lookup-service (not in PI - included as a reference)**
+:::::: col-wrapper
+::: col-third
 | metadata.trace.service |
 | ---- | 
 | ParticipantsErrorByIDPut |
@@ -248,23 +277,30 @@ The trace data gives us more information on which service created the events.
 | PartiesBySubIdTypeAndIDGet |
 | PartiesSubIdByTypeAndIDPut |
 | PartiesErrorBySubIdTypeAndIDPut |
+:::
 
-
+::: col-third
 | metadata.trace.service |
 | ---- |
 | OraclesGet |
 | OraclesPost |
 | OraclesByIdPut |
 | OraclesByIdDelete |
+:::
 
-
+::: col-third
 | metadata.trace.service |
 | ---- |
 | postParticipants |
 | getPartiesByTypeAndID |
 | ... |
+:::
+:::::::::
 
-##### transaction-requests-service (not in PI - included as a reference)
+
+**transaction-requests-service (not in PI - included as a reference)**
+:::::: col-wrapper
+::: col-third
 | metadata.trace.service |
 | ----- |
 | TransactionRequestsErrorByID |
@@ -274,13 +310,16 @@ The trace data gives us more information on which service created the events.
 | AuthorizationsIDResponse |
 | AuthorizationsIDPutResponse |
 | AuthorizationsErrorByID |
+:::
 
-
+::: col-third
 | metadata.trace.service |
 | ----- |
 | forwardAuthorizationMessage |
 | forwardAuthorizationError |
 | ... |
+:::
+:::::::::
 
 ### Useful tools
 #### Kafka explorer
