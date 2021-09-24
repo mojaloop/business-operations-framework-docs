@@ -52,9 +52,6 @@ Is the standard that has been chosen to interact with an identity management sys
 ## Alignment to the Reference Architecture
 ![Overview Diagram illustrating the alignment to the Reference Architecture](/BizOps-Framework-Security-BC.png) 
 
-## Alignment with IaC 4.xxx
-Here is a diagram illustrating how the high level architecture would look like in the IaC 4.xxx version (that uses Keycloak and Ambassador / Envoy amongst other changes instead of WSO2).
-![Architecture Overview Diagram of Security Bounded Context Implementation](/BizOps-Framework-IaC-4.xx-&-Mojaloop-13.xx.png)  
 
 ### Functions Implemented
 This implmentation of the security BC takes advantage of standard security tools available. In the case where a reference architecture function is alrealy implemented by the chosen standard tool, then it was decided to use that tools function. Where that was done, a mention to the appropriate tool is made.
@@ -83,6 +80,12 @@ This was not a requirement specified by the reference architecture, however it w
 
 2. **Assignment of Participant access**
 In order to implementent external API's to participant DFSPs, an aditional permission assignment was added where participant access is added to identity accounts. This has been implemented in Keto and maintained through the User-Role API. Checking access is through a standard Keto API call.
+
+## Alignment with IaC 4.xxx
+Here is a diagram illustrating how the high level architecture would look like in the IaC 4.xxx version (that uses Keycloak and Ambassador / Envoy amongst other changes instead of WSO2).
+![Architecture Overview Diagram of Security Bounded Context Implementation](/BizOps-Framework-IaC-4.xx-&-Mojaloop-13.xx.png)  
+
+
 
 ## Sequence Diagrams
 ### Logging into the UI
