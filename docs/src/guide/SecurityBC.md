@@ -155,15 +155,15 @@ Accept: application/json
 
 ```json 
 [
-{
-"action": "insert",
-"relation_tuple": {
-"namespace": "role",
-"object": "x",
-"relation": "member",
-"subject": "b"
-}
-}
+  {
+    "action": "insert",
+    "relation_tuple": {
+    "namespace": "role",
+    "object": "RoleIdentifier",
+    "relation": "member",
+    "subject": "userIdentifier"
+    }
+  }
 ]
 ```
 On success a 204 message is returned with no content
@@ -199,15 +199,15 @@ Accept: application/json
 
 ```json
 [
-{
-"action": "insert",
-"relation_tuple": {
-"namespace": "permission",
-"object": "q",
-"relation": "granted",
-"subject": "role:x#member"
-}
-}
+  {
+  "action": "insert",
+  "relation_tuple": {
+    "namespace": "permission",
+    "object": "permissionIdentifier",
+    "relation": "granted",
+    "subject": "role:x#member"
+  }
+  }
 ]
 ```
 On success a 204 message is returned with no content
@@ -225,10 +225,10 @@ Accept: application/json
 :::
 ```json
 {
-"namespace": "permission",
-"object": "q",
-"relation": "granted",
-"subject": "b"
+  "namespace": "permission",
+  "object": "PermissionIdentifier",
+  "relation": "granted",
+  "subject": "UserIdentifier"
 }
 ```
 **Response:**

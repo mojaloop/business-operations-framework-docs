@@ -162,7 +162,8 @@ The Graph QL technology choice for this API is:
       Concern is that longterm this could become difficult to maintain and requires specialists to build.
    - New tools simplifying Graph QL implementation and we have a resident expert. I.e. it has not been a large work effort.
    - Will provide examples so that little or no GraphQL prior knowledge is required.
-**Additional advantages:**
+
+**Additional advantages on using GraphQL:**
    - Reusable resources/associated RBAC permissions between reports
    - Complex queries are simpler to build because resources are modeled. 
    - Mixing of data sources in a single query (e.g. MySQL with MongoDB ).
@@ -170,13 +171,13 @@ The Graph QL technology choice for this API is:
    - No requirement for multiple fetches.
    - No requirement for API version. API naturally supports backward compatibility between versions. 
 
-**Community Reservations**
+**Community Reservations on using GraphQL**
 The community has raised a concern regarding the choice of graphQL for the API instead of using a standard rest implmentation. The main argument for this is that the current requirment or use case can be fulfilled with a REST base approach so this doesn't warrant introducing a new technology. 
 This can be refrased into this question:
 :::tip Crux of the issue
 Does the addition of GraphQL add more complexity to the solution than the benefits that it brings?
 :::
-Although this does have merit and is worth discussion, unfortunately this concern was raised too late in the build process so was not able to adjust the design. Our implementation of GraphQL doesn't add much complexity and fits better with the RBAC requirements.
+Although this does have merit and is worth discussion, unfortunately this concern was raised too late in the build process so was not able to adjust the design. Our implementation of GraphQL doesn't add much complexity and fits better with the RBAC requirements, and is developer freindly. 
 
 The implementation of the GraphQL API is only a small part of the work effort, and can easily be replaced or even implemented in parallel. So should we be proved to be wrong this approach can easily be changed at a later date.
 
@@ -221,7 +222,7 @@ The event stream processor will subscribe to the Kafa Topic **'topic-event'**. T
 
 :::tip Note:
 The code delivering this functionality has been structure so that these filters can easily be modified or extended.
-Currently the 
+The subscribed and classified messages are represented in 'const' files so can easily be added to or amended without detailed knowledge of the code.
 :::
 ### Storing only 'Audit' messages
 
@@ -449,6 +450,38 @@ I.e. a new customised resource can be added to this API by doing these three thi
 3. Define the graph QL resource names and fields
 3. Define the user permission that is linked to this resource
 
-Todo: need to provide file examples for MySQL and MongoDB
+### GraphQL Query examples
+**Query Transfers that are filered on a specific payer DFSP**
+```GraphQL
+query GetTransfers {
+  transfers(filter: {
+    payer: "payerfsp"
+  }) {
+    transferId
+    createdAt
+    payee {
+      name
+    }
+  }
+}
+```
 
+**Query a summary of the transfers**
+```GraphQL
+query TransferSumary2021Q1 {
+  transferSummary(
+    filter: {
+        currency: "USD"
+        startDate: "2021-01-01"
+        endDate: "2021-03-31"
+    }) {
+        count
+        payer
+  }
+}
+```
+
+**Query**
+```GraphQL
+```
 ## 

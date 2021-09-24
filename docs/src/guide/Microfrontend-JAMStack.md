@@ -64,13 +64,14 @@ The registry would serve the following purposes:
 3. provide informations around the versions of the available micro frontends
 
 ## Why is this design JAMStack and why is that important?
-This framework is JAMStack compatible. The deployment will:
-1. use Static Markup that is rendered during or before a deployment
-2. use API’s to provide functionality and content to the UI
-3. use client side Javascript to provide local view and controller functionality and state
-use a CDN deploy 
-4. implement atomic deploys that are triggered using git actions
-5. use automatic cache invalidation by incrementing versions.
+This framework is JAMStack compatible. 
+The deployment:
+   1. uses Static Markup that is rendered during or before a deployment
+   2. uses API’s to provide functionality and content to the UI
+   3. uses client side Javascript to provide local view and controller functionality and state 
+   4. uses a CDN deploy 
+   5. implements atomic deploys that are triggered using git actions
+   6. uses dynamically loaded microfront ends, so updating to latest version is automatic.
 
 ## Deployments
 
