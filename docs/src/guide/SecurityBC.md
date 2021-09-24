@@ -52,6 +52,10 @@ Is the standard that has been chosen to interact with an identity management sys
 ## Alignment to the Reference Architecture
 ![Overview Diagram illustrating the alignment to the Reference Architecture](/BizOps-Framework-Security-BC.png) 
 
+## Alignment with IaC 4.xxx
+Here is a diagram illustrating how the high level architecture would look like in the IaC 4.xxx version (that uses Keycloak and Ambassador / Envoy amongst other changes instead of WSO2).
+![Architecture Overview Diagram of Security Bounded Context Implementation](/BizOps-Framework-IaC-4.xx-&-Mojaloop-13.xx.png)  
+
 ### Functions Implemented
 This implmentation of the security BC takes advantage of standard security tools available. In the case where a reference architecture function is alrealy implemented by the chosen standard tool, then it was decided to use that tools function. Where that was done, a mention to the appropriate tool is made.
 1. **Create Users / Apps / Groups** 
@@ -120,7 +124,6 @@ spec:
 Ory Keto in this design is the tool that implements the logic of whether a login token has the correct authorisation to access an aspect of the system. I.e. it is use to enforce the RBAC (Role Based Access  Control). There are three part to how this is implemented in Keto:
 1. The assignment of roles to users.
 This functionallity will be maintained and updated from the Role-User API module; which will call and update Keto accordingly.
-
 2. The assignment of participant access to a user. 
 This refers to the DFSP access reports that must only provide reports for the configured participants.
 This functionallity will also be maintained via the Role-User API module; which will call and update Keto accordingly. 
@@ -143,6 +146,30 @@ To retrieve the role or participant list for a particular user, the [Query Relat
 
 When a role or participant is added or removed for a user, the [create](https://www.ory.sh/keto/docs/reference/rest-api#create-a-relation-tuple) and [delete](https://www.ory.sh/keto/docs/reference/rest-api#delete-a-relation-tuple) relation tuple calls can be used, since only a single tuple is involved at a time. If the call fails, but the failure isn't 4xx, it should be retried a couple times.
 
+Here is an example of the Keto API call used to add roles to users.
+::: tip Example: Assign role to user in Ory Keto
+PATCH /relation-tuples HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+:::
+
+```json 
+[
+{
+"action": "insert",
+"relation_tuple": {
+"namespace": "role",
+"object": "x",
+"relation": "member",
+"subject": "b"
+}
+}
+]
+```
+On success a 204 message is returned with no content
+- we are using "member" as our relation in our current implementation
+- we use PATCH instead of PUT since PATCH works as a bulk create and/or delete
+
 ### Adding permissions or privileges to roles in Keto
 This will be a Kubernetes Operator for a Custom Resource Definition [(CRD)](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/_print/). The operator could be implemented in most any language; existing Modusbox Operator expertise is mostly based around `kopf`, a python framework, but there are options in Go and Node as well (and others).
 
@@ -162,5 +189,51 @@ The specific operations on resource change are as follows:
 3. Execute patch from diff.
 4. If there are problems, throw an exception so the problem will log and a re-sync will be attempted later.
 
+
+Here is an example of the Keto API call used to add permissions to roles.
+::: tip Example: Assign permission/privilege to a role in Ory Keto
+PATCH /relation-tuples HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+:::
+
+```json
+[
+{
+"action": "insert",
+"relation_tuple": {
+"namespace": "permission",
+"object": "q",
+"relation": "granted",
+"subject": "role:x#member"
+}
+}
+]
+```
+On success a 204 message is returned with no content
+- we are using "granted" as our relation in our current implementation
+- we use PATCH instead of PUT since PATCH works as a bulk create and/or delete
+
 ### How to call the standard Keto API to check authorization
-Todo: we need some examples here.
+Checking to see if a user has authorisation for a priveledge or permission is managed by th API gateway, and if necessary can be checked by each bounded context.
+
+Here is an example of the Keto API call used to check for a users authorisation based on a permission/privilege.
+::: tip Example: Checking for authorisation in Ory Keto
+POST /check HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+:::
+```json
+{
+"namespace": "permission",
+"object": "q",
+"relation": "granted",
+"subject": "b"
+}
+```
+**Response:**
+```json
+{
+"allowed": true/false
+}
+```
