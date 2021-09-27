@@ -1,8 +1,16 @@
-# Security Bounded Context
-todo: need an introduction here
+# Security Bounded Context Implementation
+## Introduction to the security BC
+The security bounded context refers to the [bounded security domain](https://ref-arch-docs.moja-lab.live/refarch/boundedContexts/security/) as defined in the reference architecture documentation.
+To meet the security objectives of this framework, part of the reference architecture security bounded context has been implmented. This guide outlines the high level designs and explains the design thinging that went into the design.
 
+The security design:
+1. implements role based access control to the current Mojaloop version
+1. is compatible with the reference architecture and therefore future versions of Mojaloop
+1. is compatible with future IaC deployments
+1. provides activity logging that can be used in an audit.
 
 ## Tools / standards chosen
+Here is a list of standard tools that have been chosen to implement in this design.
 1. **Ory Oathkeeper** 
 Will be used as the Identity and Access Proxy (IAP) that will check authentication and authorization before providing access to functional end points. I.e. it will be used to enforce the access control.
 2. **Ory Keto** 
@@ -13,43 +21,26 @@ Will use Ory Kratos to create and manage the cookie authorization object.
 Is the standard that has been chosen to interact with an identity management system. This is a widely supported standard, and is compatible with all the tools currently in use in the Mojaloop community. I.e. WS02 IS, Keycloak and Ory Kratos
 
 ## Overview Architecture
+Here is a high level architecture overview of the implementation of this security bounded context onto the current Mojaloop version.
 
 ![Architecture Overview Diagram of Security Bounded Context Implementation](/BizOps-Framework-IaC-3.xx-&-Mojaloop-13.xx.png)  
 
-## Tools Services and the roles they are playing
-1. **WS02 IS KM**
-**owns:** the users
-**Implements:** user login redirection and UI that creates the cookie token
-**Implements:** standard OIDC authorization code flow
-
-2. **Ory Keto**
-**owns:** the roles mapped to users
-**represents:** the permissions mapped to roles
-**owns:** the participant mapped to users
-**Implements:** API RBAC Authorisation check through Oathkeeper
-**Implements:** API ABAC Authorisation check through Operational API call
-3. **Ory Oathkeeper**
-**owns:** the permissions related to API access
-**Implements:** API Gateway for operational APIs with authentication and authorization checks
-4. **Ory Kratos**
-**Owns:** nothing
-**Implements:** Authentication Cookie
-5. **BC Operational API -**
-**owns:** the permissions related to the operational API calls
-**Implements:** operational API functions
-6. **Shim**
-**Owns:** nothing
-**Implements:** redirect to configure OIDC
-7. **Operator Role + Kubernetes role-resource file**
-**Operator Role Owns:** nothing
-**Role-resource file Owns:** the roles and the role-permission assignments
-**Implements:** update Keto to reflect role-permission assignment changes made in the role-resource file
-8. **User Role API**
-**Owns:** nothing
-**Implements:** role-user API controls (list of users, list of roles, list of roles assigned to users, add role to user, remove role from user.)
-**Implements:** participant-user API controls (list of users, list of participants, list of participants assigned to user, add participant to user, remove participant from user.)
+Here is a table of the services and the roles they are playing.
+| Service | Owns | Implements |
+| --- | --- |
+|**WS02 IS KM**|users| 1. user login redirection and UI that creates the cookie token <br>2. standard OIDC authorization code flow |
+|**Ory Keto**|1. The roles mapped to users <br> 2. The participant mapped to users| 1. API RBAC Authorisation check through Oathkeeper<br>2. API ABAC Authorisation check through Operational API call|
+|**Ory Oathkeeper**|The permissions related to API access | API Gateway for operational APIs with authentication and authorization checks|
+|**Ory Kratos**|nothing|Authentication Cookie|
+|**BC Operational API**|The permissions related to the operational API calls|Operational API functions|
+|**Shim**| nothing | Redirect to configure OIDC|
+|**Operator Role**| nothing | update Keto to reflect role-permission assignment changes made in the role-resource file|
+|**Kubernetes role-resource file**| The roles and the role-permission assignments| Edits of this file are controlled through a version control implementaiton. (e.g. Github or GitLab)|
+|**User Role API**|nothing|1. Role-user API controls <br>(list of users, list of roles, list of roles assigned to users, add role to user, remove role from user.)<br> 2. participant-user API controls <br>(list of users, list of participants, list of participants assigned to user, add participant to user, remove participant from user.)|
 
 ## Alignment to the Reference Architecture
+This overview diagram illustrated how this design conforms with the reference architecture. Some fuctions have been implemented, and others haven't been implemented, see the details below.
+
 ![Overview Diagram illustrating the alignment to the Reference Architecture](/BizOps-Framework-Security-BC.png) 
 
 
@@ -82,33 +73,63 @@ This was not a requirement specified by the reference architecture, however it w
 In order to implementent external API's to participant DFSPs, an aditional permission assignment was added where participant access is added to identity accounts. This has been implemented in Keto and maintained through the User-Role API. Checking access is through a standard Keto API call.
 
 ## Alignment with IaC 4.xxx
-Here is a diagram illustrating how the high level architecture would look like in the IaC 4.xxx version (that uses Keycloak and Ambassador / Envoy amongst other changes instead of WSO2).
+Here is a diagram illustrating how the high level architecture would look like if this security bounded context implementation design was implemented on the next IaC version (IaC 4.xxx version) that uses Keycloak and Ambassador / Envoy amongst other changes.
+
 ![Architecture Overview Diagram of Security Bounded Context Implementation](/BizOps-Framework-IaC-4.xx-&-Mojaloop-13.xx.png)  
 
+## Logging into the UI - sequence diagrams
+This sequence diagram illustrates the sequence of events that occur when a brower attemps to access a backend API. 
+- If the browser is already logged in, then the request is forwarded. 
+- If the brower isn't logged in then a standard Open Id Connect (OIDC) authorization flow is triggered starting with a redirect.
 
-
-## Sequence Diagrams
-### Logging into the UI
-This sequence diagram illustrates the sequence of events that occur when a brower attemps to access a backend API. If the browser is already logged in the request is forwarded. If the brower isn't logged in then a standard Open Id Connect (OIDC) authorization flow is triggered starting with a redirect.
 ![Sequence diagram illustrating how a brower logs in](/frontend.png) 
 
-### Micro-frontend querying data from operational API
-Sequence diagram showing more details regarding valid or invalid bearer tokens, or whether authorisation passes or fails.
+## BC Operational API micro-frontend - querying data
+Sequence diagram shows more details regarding interactions if
+- the bearer token is valid or invalid
+- or whether authorisation passes or fails.
+The Micro-frontend is represented as a client.
+
 ![Sequence diagram illustrating how an API client call has its authorisation performed](/client.png) 
 
-### Micro-frontend querying operational API and with additional authorization check
-If the operational API requires and additional authorisation check, this is what that sequence would look like.
+If a more detailed authorisation check is required to be performed by the operational API, then this sequence diagrams describes how that is implemented.
+It is important to note that not all operational API will require this level of authorisation, and that the Oathkeeper control may or may not be required in this use case.
+
 ![Sequence diagram illustrating how an API client call has its authorisation performed](/clientgraphql.png) 
 
-### Assigning Roles & Participant access to Users
-This sequence describes how the User Role and User Participation Access user interface would access the User Role API service.
+## Assigning Roles & Participant access to Users
+This functionallity is implemented in the User Role API Service. These sequence diagrams describes how the User Role and User Participation access is queried and modified by this API. 
 ![Sequence diagram illustrating how roles and participant access is assigned to users](/userroles.png) 
 
-### Assigning Permissions to Roles
-This shows how changes to the roleresource yml files that map permissions to roles that are stored in a code repository, are acted on by the role permission operator.
-![Sequence diagram illustrating how roles and participant access is assigned to users](/rolepermissions.png) 
-Example of resource YML file roleresource.yaml
+### User - Role API
+These are the user-role API resources.
 
+|Category|HTTP Method|End point| Description| Error Codes|
+| --- | --- | --- | --- | --- |
+|HEALTH| | | | |
+| | GET | /health | used to return the current status of the API | 400, 401, 403, 404, 405, 406, 501, 503 |
+| | GET | /metrics |  used to return metrics for the API | 400, 401, 403, 404, 405, 406, 501, 503|
+|PARTICIPANTS| | | | |
+| | GET | /participants | used to return a list of participant ids | 400, 401, 403, 404, 405, 406, 501, 503|
+|ROLES| | | | |
+| | GET | /roles | used to return a list of role ids |400, 401, 403, 404, 405, 406, 501, 503 |
+|USERS| | | | |
+| | GET | /users | used to return a list of user ids | 400, 401, 403, 404, 405, 406, 501, 503|
+| | GET | /users/{ID} |  used to return a specifc user |400, 401, 403, 404, 405, 406, 501, 503 |
+| | GET | /users/{ID}/participants | return a list of participants assigned to a user |400, 401, 403, 404, 405, 406, 501, 503|
+| | PATCH | /users/{ID}/participants | used to assign a participant to a user | 400, 401, 403, 404, 405, 406, 501, 503|
+| | GET | /users/{ID}/roles | return a list of roles assigned to a user|400, 401, 403, 404, 405, 406, 501, 503 |
+| | PATCH | /users/{ID}/roles | used to assign a role to a user|400, 401, 403, 404, 405, 406, 501, 503 |
+
+
+The detailed specification of the Roles API can be found [here](https://docs.mojaloop.io/roles-assignment-service).
+
+## Assigning Permissions to Roles
+The permission to role assignment is store in a yml file that we are calling a Role Resource file. 
+Access and changes to these files with be managed through a hosted version control like github, or gitlab. This is convienent as this keeps a full history and has configurable automatic and manual control points.
+These Role Resource files are mapped as Kubernetes CRD's against which a role permission operator subscribes to. Changes to the role resource files trigger the Role Permission Operator to update Ory Keto with the corresponding appropriate change. A role can be represented by more than one file if necessary.
+
+Here is an example of a role resource file:
 ```yml
 apiVersion: "mojaloop.io/v1"
 kind: MojaloopRole
@@ -123,6 +144,11 @@ spec:
   - permission_03
   - permission_04'
 ```
+This sequence digram illustrates how Ort Keto is updated.
+
+![Sequence diagram illustrating how roles and participant access is assigned to users](/rolepermissions.png) 
+Example of resource YML file roleresource.yaml
+
 ## Ory Keto - implemention detail
 Ory Keto in this design is the tool that implements the logic of whether a login token has the correct authorisation to access an aspect of the system. I.e. it is use to enforce the RBAC (Role Based Access  Control). There are three part to how this is implemented in Keto:
 1. The assignment of roles to users.
@@ -217,7 +243,7 @@ On success a 204 message is returned with no content
 - we are using "granted" as our relation in our current implementation
 - we use PATCH instead of PUT since PATCH works as a bulk create and/or delete
 
-### How to call the standard Keto API to check authorization
+### How to call the standard Keto API to check authorization?
 Checking to see if a user has authorisation for a priveledge or permission is managed by th API gateway, and if necessary can be checked by each bounded context.
 
 Here is an example of the Keto API call used to check for a users authorisation based on a permission/privilege.

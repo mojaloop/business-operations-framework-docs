@@ -1,13 +1,26 @@
 # Micro-frontend - JAMStack design
 ## Overview
-Overview Diagram showing the deployment of the micro frontends to a CDN.
-::: warning Note:
-The deployment of the bounded context API is not covered in this diagram.
-:::
-![Overview diagram showing deployment](/BizOps-Framework-Micro-frontend-deploy.png)
+The objective of micro-frontend - JAMStack design, is create a framework that empower the community to collaborate easily (by enabling independent development of components) and to make extensions or customisations easy and easy to contribute back into the OSS without branching the whole codebase. 
 
-#### High level sequence diagram illustrating how the microservices are loaded.
-![High level sequence diagram illustrating how the microservices are loaded.](/microfrontendloading.png)
+### Micro-frontends
+The framework uses micro-frontends as a means of decoupling parts of the UI to enable maintainable codebases, autonomous teams, independent releases, and incremental upgrades of parts of the UI. 
+
+### JAMStack
+The [JAMStack](https://jamstack.org/) implementation reduces the role of the Web server to the distribution static markup files. Keeping the functionallity in Javascript (that is running in the client browser) and in the backend API. 
+:::warning JAMStack stands for:
+ **J** - Javascript
+ **A** - API's 
+ **M** - Static markup
+ :::
+This Stack implementation is considered best practice as it:
+- Is much simpler to keep secure
+- Provides a good customer experience as it has fast web response times
+- Inexpensive to host
+
+In addition to this the following have also been engineered and are normally part of a JAMStack implementation:
+1. deployment to a CDN (cloud destribution network)
+1. atomic deploys
+1. uses dynamically loaded microfront ends, so updating to latest version is automatic
 
 ## Technology Stack
 
@@ -53,8 +66,12 @@ It includes an internal engine responsible for loading only the necessary childr
 
 The individual micro frontends won’t be loaded when not necessary (e.g. when a specific page is not accessed by the user).
 
+**High level sequence diagram illustrating how the microservices are loaded.**
+![High level sequence diagram illustrating how the microservices are loaded.](/microfrontendloading.png)
 
-## Repository of micro frontends
+
+
+### Repository of micro frontends
 In order to provide a centralized authority responsible for controlling the individual micro frontends meeting the necessary requirements, it is suggested to build a solution that works as a registry.
 
 The registry would serve the following purposes:
@@ -62,22 +79,20 @@ The registry would serve the following purposes:
 1. allow the community to register the micro frontends and specify some details
 2. expose an api used by the host to retrieve informations about the available micro frontends
 3. provide informations around the versions of the available micro frontends
+This does not exist yet, nor does it make sense to create at this time, however 
 
-## Why is this design JAMStack and why is that important?
-This framework is JAMStack compatible. 
-The deployment:
-   1. uses Static Markup that is rendered during or before a deployment
-   2. uses API’s to provide functionality and content to the UI
-   3. uses client side Javascript to provide local view and controller functionality and state 
-   4. uses a CDN deploy 
-   5. implements atomic deploys that are triggered using git actions
-   6. uses dynamically loaded microfront ends, so updating to latest version is automatic.
 
 ## Deployments
 
+Overview Diagram showing the deployment of the micro frontends to a CDN.
+::: warning Note:
+The deployment of the bounded context API is not covered in this diagram.
+:::
+![Overview diagram showing deployment](/BizOps-Framework-Micro-frontend-deploy.png)
+
 The micro frontends use atomic deployments and no full-build is ever required.
 Each individual micro frontend deploys independently from the other ones.
-## CI/CD Continuous Integration / Continuous Delivery 
+### CI/CD Continuous Integration / Continuous Delivery 
 
 Each micro frontend has its own CI/CD setup; there is no requirement to share the same setup or use the same CI tool.
 
@@ -141,10 +156,10 @@ jobs:
 #      env:
 #        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 ```
-## CDNs
+### CDNs
 
 The resulting SPA is served by a CDN or multiple CDNs. Individual micro frontends can live in different CDNs.
-## Kubernetes
+### Kubernetes
 
 The resulting SPA can run and be served in one or more Kubernetes environments.
 ### Host application
@@ -154,4 +169,12 @@ It will be acting as the orchestrator, loading the remote micro frontends and pr
 
 There is virtually no limit on how the host can grow and how much can be extended.
 It is suggested however to centralize all the host-child communication and shared components in an external library so that both host and children have the same knowledge and integration won’t break.
+
+## Git repositories
+Here is a list of Git repositories that are part of this implementation:
+
+ - [Microfrontend-shell-boilerplate](https://github.com/modusintegration/microfrontend-shell-boilerplate)
+ - [Microfrontend-boilerplate](https://github.com/modusintegration/microfrontend-boilerplate)
+ - [Microfrontend-utils](https://github.com/modusintegration/microfrontend-utils)
+Library shared with both the shell application and the microfrontend.
 
