@@ -9,7 +9,7 @@ features:
   details: This section details how the RBAC security features are implmented in the current Mojaloop version, and how this same design would evolve into the Reference Architecture Mojaloop, and the next planned IaC deployment.
 - title: Micro-service and JAMStack UI Framework
   details: This section details the tech stack, and how the elements of the micro-service and JAMStack are implemented.
-- title: Reporting & Auditing Bounded Context
-  details: Elements of the Reporting & Auditing Bounded context have been implemented in order to meet the deliverable of being able to trace a transfer end to end.
+- title: Reporting Bounded Context
+  details: Elements of the Reporting Bounded context have been implemented in order to meet the deliverable of being able to trace a transfer end to end.
 footer: Made by BizOps Framework Community Workstream.
 ---

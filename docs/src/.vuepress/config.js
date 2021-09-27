@@ -97,7 +97,7 @@ module.exports = {
             '',
             'SecurityBC',
             'Microfrontend-JAMStack',
-            'Reporting&AuditingBC',
+            'ReportingBC',
           ]
         }
       ],

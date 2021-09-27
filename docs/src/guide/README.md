@@ -1,6 +1,6 @@
 # Introduction
 
-Join the collaboration for building a “get started quickly” set of core business processes that are easy to customise and contribute to open source and follow best practice. 
+Join the collaboration for building a **“get started quickly”** set of core business processes that are easy to customise and contribute to open source and follow best practice. 
 
 The bizOps framework is a framework through which hub operators can build and deploy their business process portals to support their business processes as defined the in the [Mojaloop business documentation](https://docs.mojaloop.io/mojaloop-business-docs/). The Business Operations Framework supports community collaboration in building a User Experience for a Mojaloop hub operator that includes robust APIs, follows best practices and is secure by design that further supports adoption and enhancing off-the-shelf value of the Mojaloop solution.
 
@@ -9,9 +9,9 @@ The resulting UI is not intended to be comprehensive, but to demonstrate an exem
 This design documentation provides a more detailed designs that will include security aspects, technologies used and architecture patterns.
 
 The framework:
-1. Implements a best practice RBAC and IAM integration/implementation.
+1. Implements a best practice RBAC (Role based access control) and IAM (Identity access management) integration/implementation.
 2. Includes a deployment plan for including the RBAC and IAM solution into Mojaloop
-3. Includes a deployment plan for the UI portal so that it can be deployed into a CDN network.
+3. Includes a deployment plan for the UI (User interface) portal so that it can be deployed into a CDN (Content Delivery Network) network.
 4. Uses micro-frontends that are built from different repositories to decouple community efforts and facilitate easy extension and customisations.
 5. Provides an audit trail of all activities performed.
 
