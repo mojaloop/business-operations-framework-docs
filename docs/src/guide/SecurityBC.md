@@ -122,7 +122,8 @@ These are the user-role API resources.
 | | PATCH | /users/{ID}/roles | used to assign a role to a user|400, 401, 403, 404, 405, 406, 501, 503 |
 
 
-The detailed specification of the Roles API can be found [here](https://docs.mojaloop.io/roles-assignment-service).
+The detailed specification of the Roles API can be found [here](https://docs.mojaloop.io/role-assignment-service/
+).
 
 ## Assigning Permissions to Roles
 The permission to role assignment is store in a yml file that we are calling a Role Resource file. 
