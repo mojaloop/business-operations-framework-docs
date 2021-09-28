@@ -82,10 +82,33 @@ module.exports = {
       {
         text: 'Technical Guide',
         link: '/guide/',
+        items: [
+          {
+            text: 'Technical Introduction',
+            link: '/Guide/',
+          },
+          {
+            text: 'Security BC Implementation',
+            link: '/Guide/SecurityBC.html',
+          },
+          {
+            text: 'Micro-frontend - JAMStack design',
+            link: '/Guide/Microfrontend-JAMStack.html',
+          },
+          {
+            text: 'Reporting BC Implementation',
+            link: '/Guide/ReportingBC.html',
+          }
+        ]
+
       },
       {
         text: 'Mojaloop',
         link: 'https://mojaloop.io/'
+      },
+      {
+        text: 'Business Documents',
+        link: 'https://docs.mojaloop.io/mojaloop-business-docs/'
       }
     ],
     sidebar: {
