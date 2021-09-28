@@ -18,7 +18,7 @@ This Stack implementation is considered best practice as it:
 - Inexpensive to host
 
 In addition to this the following have also been engineered and are normally part of a JAMStack implementation:
-1. deployment to a CDN (cloud delivery network)
+1. deployment to a CDN (content delivery network)
 1. atomic deploys
 1. uses dynamically loaded microfront ends, so updating to latest version is automatic
 
