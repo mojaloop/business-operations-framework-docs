@@ -82,7 +82,7 @@ This sequence diagram illustrates the sequence of events that occur when a browe
 - If the browser is already logged in, then the request is forwarded. 
 - If the brower isn't logged in then a standard Open Id Connect (OIDC) authorization flow is triggered starting with a redirect.
 
-![Sequence diagram illustrating how a brower logs in](/frontend.png) 
+![Sequence diagram illustrating how a brower logs in](../.vuepress/public/frontend.png) 
 
 ## BC Operational API micro-frontend - querying data
 Sequence diagram shows more details regarding interactions if

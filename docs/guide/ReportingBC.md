@@ -3,7 +3,7 @@ One of the objectives of this workstream project is to provide the ability to tr
 
 ## Design Overview
 Here is the overall architectural design.
-![Architecture Overview Diagram of Reporting Bounded Context](/Reporting-&-Auditing-Overview.png)
+![Architecture Overview Diagram of Reporting Bounded Context](../.vuepress/public/Reporting-&-Auditing-Overview.png)
 
 In Mojaloop, all the core services are already pushing events to kafka on a topic ‘topic-event’.
 
@@ -147,7 +147,7 @@ Search String on messages
 
 ## Business work flow
 Here is a business work flow that describes how the use cases are called.
-![Business Work Flow](/BusinessFlowView.png)
+![Business Work Flow](../.vuepress/public/BusinessFlowView.png)
 
 ## Tools Chosen
 ### Event Data Store: MongoDB
