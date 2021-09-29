@@ -106,14 +106,14 @@ These are the user-role API resources.
 
 |Category|HTTP Method|End point| Description| Error Codes|
 | --- | --- | --- | --- | --- |
-|HEALTH| | | | |
+|**HEALTH**| | | | |
 | | GET | /health | used to return the current status of the API | 400, 401, 403, 404, 405, 406, 501, 503 |
 | | GET | /metrics |  used to return metrics for the API | 400, 401, 403, 404, 405, 406, 501, 503|
-|PARTICIPANTS| | | | |
+|**PARTICIPANTS**| | | | |
 | | GET | /participants | used to return a list of participant ids | 400, 401, 403, 404, 405, 406, 501, 503|
-|ROLES| | | | |
+|**ROLES**| | | | |
 | | GET | /roles | used to return a list of role ids |400, 401, 403, 404, 405, 406, 501, 503 |
-|USERS| | | | |
+|**USERS**| | | | |
 | | GET | /users | used to return a list of user ids | 400, 401, 403, 404, 405, 406, 501, 503|
 | | GET | /users/{ID} |  used to return a specifc user |400, 401, 403, 404, 405, 406, 501, 503 |
 | | GET | /users/{ID}/participants | return a list of participants assigned to a user |400, 401, 403, 404, 405, 406, 501, 503|

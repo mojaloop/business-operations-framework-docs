@@ -157,9 +157,9 @@ The MongoDB database was chosen because:
    - Other tools where considered but were found not to meet all the requirements for and OSS tool in Mojaloop.
  
 ### API: GraphQL
-The design of the reporting bounded context includes both a REST API and a GraphQL API.
-Only one of the API implementation is neccessary, but both are possible and can live along side eachother.
-As part of this workstream, the Graph QL API implementation was chosen for these reasons:
+In additional to the existing reporting API, a GraphQL API will be deployed alongside. This new API will have the additional functionallity of being able to access the event reporting database as suplementary data or stand alone query data. 
+
+The Graph QL API implementation was added for these reasons:
    - A more natural RBAC Modelling implementation
    - Easier to mix data from different sources into a single resource
    - Existing reporting solution's implementation resulted in very complex SQL statements that required specialist knowledge to build and maintain. Splitting the data into a more natural resource and subsequent SQL statement simplifies both the SQL statement and the useage of that resource.
@@ -222,9 +222,6 @@ query TransferSumary2021Q1 {
 }
 ```
 
-**Query**
-```GraphQL
-```
 
 ## Building the Event data store
 The purpose the Event data store, is to provide a persistent storage of events of interest that are easily and efficiently found and queried for reporting.
