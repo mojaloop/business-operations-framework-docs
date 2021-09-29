@@ -173,8 +173,10 @@ It is suggested however to centralize all the host-child communication and share
 ## Git repositories
 Here is a list of Git repositories that are part of this implementation:
 
- - [Microfrontend-shell-boilerplate](https://github.com/modusintegration/microfrontend-shell-boilerplate)
- - [Microfrontend-boilerplate](https://github.com/modusintegration/microfrontend-boilerplate)
+ - [Microfrontend-shell-boilerplate](https://github.com/mojaloop/microfrontend-shell-boilerplate)
+ - [Microfrontend-boilerplate](https://github.com/mojaloop/microfrontend-boilerplate)
  - [Microfrontend-utils](https://github.com/modusintegration/microfrontend-utils)
 Library shared with both the shell application and the microfrontend.
-
+ - [Reporting-Hub BizOps Role Assignment Microfrontend](https://github.com/mojaloop/reporting-hub-bop-role-ui)
+ - [Reporting-Hub BizOps Transaction Tracing Microfrontend](https://github.com/mojaloop/reporting-hub-bop-trx-ui)
+  

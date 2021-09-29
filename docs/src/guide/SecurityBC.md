@@ -124,6 +124,7 @@ These are the user-role API resources.
 
 The detailed specification of the Roles API can be found [here](https://docs.mojaloop.io/role-assignment-service/
 ).
+The git repository can be found [here](https://github.com/mojaloop/role-assignment-service).
 
 ## Assigning Permissions to Roles
 The permission to role assignment is store in a yml file that we are calling a Role Resource file. 
