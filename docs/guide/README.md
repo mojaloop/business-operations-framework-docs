@@ -31,7 +31,7 @@ Part of this bounded context is being built as part of this workstream.
 
 Here is an overall view of how the operational APIs, experience APIs, and micro-front ends can be combined into micro frontends forming the BizOps framework.
 
-![Architecture Overview Diagram compatible with the Reference Architecture ](/BizOps-Framework-BizOps-Framework.png) 
+![Architecture Overview Diagram compatible with the Reference Architecture ](../.vuepress/public/BizOps-Framework-BizOps-Framework.png) 
 
 The initial delivery of this framework includes a thin vertical slice to demonstrate the end to end functional implementation of the framework. Although this function serves an important puropse, this is not the end objective of this project. This objective is to provide a framework that other community efforts can contribute to. Here is the current todo list of micro-frontends are are intended to be added to this framework by Mojaloop community implementation efforts:
 1. **Platform Configuration**
