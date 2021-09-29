@@ -23,7 +23,7 @@ Is the standard that has been chosen to interact with an identity management sys
 ## Overview Architecture
 Here is a high level architecture overview of the implementation of this security bounded context onto the current Mojaloop version.
 
-![Architecture Overview Diagram of Security Bounded Context Implementation](../.vuepress/public/BizOps-Framework-IaC-4.xx-&-Mojaloop-13.xx.png)
+![Architecture Overview Diagram of Security Bounded Context Implementation](../.vuepress/public/BizOps-Framework-IaC-3.xx-&-Mojaloop-13.xx.png)
 
 Here is a table of the services and the roles they are playing.
 | Service | Owns | Implements |
