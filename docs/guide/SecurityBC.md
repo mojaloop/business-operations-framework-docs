@@ -23,7 +23,7 @@ Is the standard that has been chosen to interact with an identity management sys
 ## Overview Architecture
 Here is a high level architecture overview of the implementation of this security bounded context onto the current Mojaloop version.
 
-![Architecture Overview Diagram of Security Bounded Context Implementation](/BizOps-Framework-IaC-3.xx-&-Mojaloop-13.xx.png)  
+![Architecture Overview Diagram of Security Bounded Context Implementation](../.vuepress/public/BizOps-Framework-IaC-3.xx-&-Mojaloop-13.xx.png)
 
 Here is a table of the services and the roles they are playing.
 | Service | Owns | Implements |
@@ -41,7 +41,7 @@ Here is a table of the services and the roles they are playing.
 ## Alignment to the Reference Architecture
 This overview diagram illustrated how this design conforms with the reference architecture. Some fuctions have been implemented, and others haven't been implemented, see the details below.
 
-![Overview Diagram illustrating the alignment to the Reference Architecture](/BizOps-Framework-Security-BC.png) 
+![Overview Diagram illustrating the alignment to the Reference Architecture](../.vuepress/public/BizOps-Framework-Security-BC.png) 
 
 
 ### Functions Implemented
@@ -75,7 +75,7 @@ In order to implementent external API's to participant DFSPs, an aditional permi
 ## Alignment with IaC 4.xxx
 Here is a diagram illustrating how the high level architecture would look like if this security bounded context implementation design was implemented on the next IaC version (IaC 4.xxx version) that uses Keycloak and Ambassador / Envoy amongst other changes.
 
-![Architecture Overview Diagram of Security Bounded Context Implementation](/BizOps-Framework-IaC-4.xx-&-Mojaloop-13.xx.png)  
+![Architecture Overview Diagram of Security Bounded Context Implementation](../.vuepress/public/BizOps-Framework-IaC-4.xx-&-Mojaloop-13.xx.png)  
 
 ## Logging into the UI - sequence diagrams
 This sequence diagram illustrates the sequence of events that occur when a brower attemps to access a backend API. 
@@ -90,16 +90,16 @@ Sequence diagram shows more details regarding interactions if
 - or whether authorisation passes or fails.
 The Micro-frontend is represented as a client.
 
-![Sequence diagram illustrating how an API client call has its authorisation performed](/client.png) 
+![Sequence diagram illustrating how an API client call has its authorisation performed](../.vuepress/public/client.png) 
 
 If a more detailed authorisation check is required to be performed by the operational API, then this sequence diagrams describes how that is implemented.
 It is important to note that not all operational API will require this level of authorisation, and that the Oathkeeper control may or may not be required in this use case.
 
-![Sequence diagram illustrating how an API client call has its authorisation performed](/clientgraphql.png) 
+![Sequence diagram illustrating how an API client call has its authorisation performed](../.vuepress/public/clientgraphql.png) 
 
 ## Assigning Roles & Participant access to Users
 This functionallity is implemented in the User Role API Service. These sequence diagrams describes how the User Role and User Participation access is queried and modified by this API. 
-![Sequence diagram illustrating how roles and participant access is assigned to users](/userroles.png) 
+![Sequence diagram illustrating how roles and participant access is assigned to users](../.vuepress/public/userroles.png) 
 
 ### User - Role API
 These are the user-role API resources.
@@ -148,7 +148,7 @@ spec:
 ```
 This sequence digram illustrates how Ort Keto is updated.
 
-![Sequence diagram illustrating how roles and participant access is assigned to users](/rolepermissions.png) 
+![Sequence diagram illustrating how roles and participant access is assigned to users](../.vuepress/public/rolepermissions.png) 
 Example of resource YML file roleresource.yaml
 
 ## Ory Keto - implemention detail

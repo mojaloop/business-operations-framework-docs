@@ -1,0 +1,31 @@
+{
+  "name": "BizOpsFrameworkDocs",
+  "version": "0.0.1",
+  "description": "Business Operations Framework Documentation",
+  "main": "index.js",
+  "contributors": [
+    "Paul Baker <Paul.Baker@modusbox.com>",
+    "Miguel de Barros <miguel.debarros@modusbox.com>"
+  ],
+  "repository": "https://github.com/mojaloop/business-operations-framework-docs",
+  "scripts": {
+    "dev": "vuepress dev docs --no-cache",
+    "build": "vuepress build docs",
+    "dep:check": "npx ncu -e 2",
+    "dep:update": "npx ncu -u",
+    "ci": "yarn install --frozen-lockfile"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@vuepress/plugin-back-to-top": "^1.8.2",
+    "@vuepress/plugin-medium-zoom": "^1.8.2",
+    "markdown-it": "^12.2.0",
+    "markdown-it-footnote": "^3.0.3",
+    "markdown-it-multimd-table": "^4.1.1",
+    "npm-check-updates": "^11.8.5",
+    "vuepress": "^1.8.2",
+    "vuepress-plugin-global-variables": "^0.2.0",
+    "vuepress-plugin-versioning": "^4.10.2",
+    "vuepress-theme-titanium": "^4.9.0"
+  }
+}
