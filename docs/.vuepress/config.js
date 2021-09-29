@@ -9,6 +9,7 @@ module.exports = {
    * Ref：https://v1.vuepress.vuejs.org/config/#description
    */
   description: description,
+  base: '/business-operations-framework-docs/',
 
   /**
    * Customize Markdown
