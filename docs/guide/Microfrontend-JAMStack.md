@@ -67,7 +67,7 @@ It includes an internal engine responsible for loading only the necessary childr
 The individual micro frontends won’t be loaded when not necessary (e.g. when a specific page is not accessed by the user).
 
 **High level sequence diagram illustrating how the microservices are loaded.**
-![High level sequence diagram illustrating how the microservices are loaded.](/microfrontendloading.png)
+![High level sequence diagram illustrating how the microservices are loaded.](../.vuepress/public/microfrontendloading.png)
 
 
 
@@ -88,7 +88,7 @@ Overview Diagram showing the deployment of the micro frontends to a CDN.
 ::: warning Note:
 The deployment of the bounded context API is not covered in this diagram.
 :::
-![Overview diagram showing deployment](/BizOps-Framework-Micro-frontend-deploy.png)
+![Overview diagram showing deployment](../.vuepress/public/BizOps-Framework-Micro-frontend-deploy.png)
 
 The micro frontends use atomic deployments and no full-build is ever required.
 Each individual micro frontend deploys independently from the other ones.
