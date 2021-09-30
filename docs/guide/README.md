@@ -2,7 +2,7 @@
 
 Join the collaboration for building a **“get started quickly”** set of core business processes that are easy to customise and contribute to open source and follow best practice. 
 
-The bizOps framework is a framework through which hub operators can build and deploy their business process portals to support their business processes as defined the in the [Mojaloop business documentation](https://docs.mojaloop.io/mojaloop-business-docs/). The Business Operations Framework supports community collaboration in building a User Experience for a Mojaloop hub operator that includes robust APIs, follows best practices and is secure by design that further supports adoption and enhancing off-the-shelf value of the Mojaloop solution.
+The Business Operations Framework is a framework through which hub operators can build and deploy their business process portals to support their business processes as defined the in the [Mojaloop business documentation](https://docs.mojaloop.io/mojaloop-business-docs/). The Business Operations Framework supports community collaboration in building a User Experience for a Mojaloop hub operator that includes robust APIs, follows best practices and is secure by design that further supports adoption and enhancing off-the-shelf value of the Mojaloop solution.
 
 The resulting UI is not intended to be comprehensive, but to demonstrate an exemplar web experience that is easy to extend and customize. It is therefore important that Role Based Access Control, interfacing with standard Identity Access Management systems, API level security control, micro-frontends and maker-checker workflows are supported. The UX architecture follows a pre-compiled bundle with a backing API pattern that can be deployed on a Content Delivery Network (CDN). 
 
@@ -21,15 +21,16 @@ Three levels or degrees of control are required when configuring the best practi
 3. Restrictions on API access on the basis of permissions available to a subject (a user or API client) through their roles.
 
 ## Reference Architecture - Context
-The reference architecture workstream has through a collaborative process designed the future / next version architecture of Mojaloop. The BizOps Framework is being designed to work on the current existing Mojaloop version. The BizOps Framework must however be compatible with the reference architecture, and wherever possible, facilitate the move towards the reference architecture design.
-There are three elements in BizOps framework project that are directly contributing to the reference architecture building:
+The reference architecture workstream has through a collaborative process designed the future / next version architecture of Mojaloop. The Business Operations Framework is being designed to work on the existing Mojaloop version (core v1.0). The Business Operations Framework must however be compatible with the reference architecture, and wherever possible, facilitate the move towards the reference architecture design.
+
+There are three elements in the Business Operations framework project that are directly contributing to the building of reference architecture:
 1. **Security bounded context.**
 Part of this bounded context is being built as part of this workstream.
 The split of the frontend into micro-frontends that can be built, tested and released independently; empowering teams building solutions within each bounded context to be able to independently build API functionality and corresponding UI. Customisations and extensions to each bounded context are also easily supported with this design.
 2. **Reporting and auditing bounded context.**
 Part of this bounded context is being built as part of this workstream.
 
-Here is an overall view of how the operational APIs, experience APIs, and micro-front ends can be combined into micro frontends forming the BizOps framework.
+Here is an overall view of how the operational APIs, experience APIs, and micro-front ends can be combined into micro frontends forming the Business Operations framework.
 
 ![Architecture Overview Diagram compatible with the Reference Architecture ](../.vuepress/public/BizOps-Framework-BizOps-Framework.png) 
 
@@ -54,5 +55,4 @@ Management interface for settlement.
 1. **Reporting and analytics**
 
 ## IaC 4.xx - Context
-The next version of the infrastructure as code project is planned to use a different set of tools than what is currently in use in the Mojaloop Community.
-I.e. WS02 with it’s IS-KM and the HAproxy implementations are to be replaced with Keycloak, Ambassador - Envoy tools. This design is compatible with the next IaC version.
+The next version of "Infrastrcuture as Code" project plans on using a different set of tools than those currently in use in the Mojaloop Community; i.e. WSO2 with its IS-KM and the HAproxy implementations are to be replaced with Keycloak, Ambassador - Envoy tools. This design is compatible with the next IaC version.
