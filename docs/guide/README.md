@@ -20,6 +20,24 @@ Three levels or degrees of control are required when configuring the best practi
 2. Mappings of roles to permissions that can be edited through a configuration change request.
 3. Restrictions on API access on the basis of permissions available to a subject (a user or API client) through their roles.
 
+## Community Effort - todo list
+The initial delivery of this framework includes a thin vertical slice to demonstrate the end to end functional implementation of the framework. Although this function serves an important puropse, this is not the end objective of this project. This objective is to provide a framework that other community efforts can contribute to. Here is the current todo list of API backend process support / micro-frontends are are intended to be added to this framework by Mojaloop community implementation efforts:
+
+|Category|Description|Contributing Community Effort|
+| --- | --- | --- |
+|**Platform Configuration**|Process to configure the platform so that it enforces the scheme and the scheme rules.| - |
+|**Platform Management**|Technical operational management controls for the platform.| Currently performed with Kibana APM & Elastic Search. No current plan to move to framework. |
+|**Liquidity Management**|Process support for managing Liquidity.|Financial Portal V2 - not yet part of framework.|
+|**Participant Lifecycle Management <br> (Hub view)**|Manage the onboarding and status transitions of participants.|Financial Portal V2 - not yet part of framework.|
+|**Participant Lifecycle Management <br> (DFSP view)**|Allow DFSP to manage their status and interaction with the Hub.| - |
+|**Settlement Management**|Management interface for settlement.|DFSP reconciliation reports - MMD report are being incorporated into the framework (accessed through API)<br>Multi-lateral defered net settlement - Financal Portal V2 not yet available in framework.|
+|**Transfer and Transaction Management**| Business Operations view of all transactions a the hub. | Financial Portal V2 - being converted into framework with enhancements. Enabling the Tracing a transfer end to end. |
+|**Agreement (Quoting) Management**| - | - |
+|**Account Lookup & Discovery Management**| - | - |
+|**3rd Party Initiated Payments Management**| - | - |
+|**Fees (interchange and billing) Management**| - | - |
+|**Reporting and analytics**| - | - |
+
 ## Reference Architecture - Context
 The reference architecture workstream has through a collaborative process designed the future / next version architecture of Mojaloop. The Business Operations Framework is being designed to work on the existing Mojaloop version (core v1.0). The Business Operations Framework must however be compatible with the reference architecture, and wherever possible, facilitate the move towards the reference architecture design.
 
@@ -27,32 +45,13 @@ There are three elements in the Business Operations framework project that are d
 1. **Security bounded context.**
 Part of this bounded context is being built as part of this workstream.
 The split of the frontend into micro-frontends that can be built, tested and released independently; empowering teams building solutions within each bounded context to be able to independently build API functionality and corresponding UI. Customisations and extensions to each bounded context are also easily supported with this design.
-2. **Reporting and auditing bounded context.**
+2. **Reporting bounded context.**
 Part of this bounded context is being built as part of this workstream.
 
 Here is an overall view of how the operational APIs, experience APIs, and micro-front ends can be combined into micro frontends forming the Business Operations framework.
 
 ![Architecture Overview Diagram compatible with the Reference Architecture ](../.vuepress/public/BizOps-Framework-BizOps-Framework.png) 
 
-The initial delivery of this framework includes a thin vertical slice to demonstrate the end to end functional implementation of the framework. Although this function serves an important puropse, this is not the end objective of this project. This objective is to provide a framework that other community efforts can contribute to. Here is the current todo list of micro-frontends are are intended to be added to this framework by Mojaloop community implementation efforts:
-1. **Platform Configuration**
-Process to configure the platform so that it enforces the scheme and the scheme rules.
-1. **Platform Management**
-Technical operational management controls for the platform.
-1. **Liquidity Management**
-Process support for managing Liquidity.
-1. **Participant Lifecycle Management (Hub view)** 
-Manage the onboarding and status transitions of participants.
-1. **Participant Lifecycle Management (DFSP view)** 
-Allow DFSP to manage their status and interaction with the Hub.
-1. **Settlement Management**
-Management interface for settlement.
-1. **Transfer and Transaction Management**
-1. **Agreement (Quoting) Management**
-1. **Account Lookup & Discovery Management**
-1. **3rd Party Initiated Payments Management**
-1. **Fees (interchange and billing) Management**
-1. **Reporting and analytics**
 
 ## IaC 4.xx - Context
 The next version of "Infrastrcuture as Code" project plans on using a different set of tools than those currently in use in the Mojaloop Community; i.e. WSO2 with its IS-KM and the HAproxy implementations are to be replaced with Keycloak, Ambassador - Envoy tools. This design is compatible with the next IaC version.

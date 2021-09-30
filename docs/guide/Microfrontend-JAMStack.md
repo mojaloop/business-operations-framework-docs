@@ -173,10 +173,59 @@ It is suggested however to centralize all the host-child communication and share
 ## Git repositories
 Here is a list of Git repositories that are part of this implementation:
 
- - [Microfrontend-shell-boilerplate](https://github.com/mojaloop/microfrontend-shell-boilerplate)
- - [Microfrontend-boilerplate](https://github.com/mojaloop/microfrontend-boilerplate)
- - [Microfrontend-utils](https://github.com/modusintegration/microfrontend-utils)
+ - [Micro frontend-shell-boilerplate](https://github.com/mojaloop/microfrontend-shell-boilerplate)
+ - [Micro frontend-boilerplate](https://github.com/mojaloop/microfrontend-boilerplate)
+ - [Micro frontend-utils](https://github.com/modusintegration/microfrontend-utils)
 Library shared with both the shell application and the microfrontend.
- - [Reporting-Hub BizOps Role Assignment Microfrontend](https://github.com/mojaloop/reporting-hub-bop-role-ui)
- - [Reporting-Hub BizOps Transaction Tracing Microfrontend](https://github.com/mojaloop/reporting-hub-bop-trx-ui)
+ - [Reporting-Hub BizOps Role Assignment Micro frontend](https://github.com/mojaloop/reporting-hub-bop-role-ui)
+ - [Reporting-Hub BizOps Transaction Tracing Micro frontend](https://github.com/mojaloop/reporting-hub-bop-trx-ui)
   
+## Micro frontend motivation in more detail
+
+​Building scalable and distributed user interfaces is complicated; logic complexity, testing setups, build and deployment costs increase over time.​Architectural decisions taken in the initial phase can be later raise unnecessary complexity and highly affect development costs in later stages.​Further more, a single project does not scale well with distributed teams co-working on the same codebase.​Switching to a microfrontend setup can solve all the above issues; it scales well, atomic deployments do not need a full build and independent teams can use different codebases.​​
+
+### What defines a micro frontend
+​The main rules that can define a micro frontend setup can be summarized in the following:​
+
+**Single responsibility**
+Defined and closed boundaries
+Centralized orchestration​
+Single Responsibility
+​Each micro frontend app should only provide specific business features. It doesn't need to know about other aspects of the business and it can scale independently.​
+
+**Defined and closed boundaries**
+​Each micro frontend should be isolated. Own it's own data and direct communication between micro frontends should not be possible.​
+
+**Centralized orchestration**
+​Each micro frontend should be loaded, handled and controlled by a host. Application-wide features are provided by the host (Authentication, routing, etc.)​​
+
+### Types of microfrontend setups
+​There are several ways to implement micro frontends, to list a few:​
+- Iframe composition
+- Runtime composition
+- Module Federation (single framework) composition​
+
+**Iframe composition**
+​Iframe composition is possibly the oldest and easiest way to implement micro frontends, due to old HTML support to iframes and the native context isolation it provides. Communication between host and micro frontends is generally hard to achieve and also does not fit well in modern web.​
+
+**Runtime composition**
+​Runtime composition is the idea of dynamically loading JS scripts located over http/https urls and compose the result locally.​While it allows to theoretically use independent technologies for each micro frontend, it's also very hard to maintain due to the differences between the frameworks used in the micro frontends.​​
+
+**SPA composition**
+​Module federation is a technology implemented in Webpack 5 that allows to dynamically load remote modules at runtime. When combined with a single application framework (e.g. React), it allows built applications to be split into multiple micro frontends without sacrificing the benefits a SPA provides. That also comes with the advantage of smaller build sizes.​​
+
+### The chosen setup
+We have chosen to use SPA composition using Webpack 5 and React. It's worth mentioning that in order to build an SPA with multiple micro frontends, a specific and rigorous contract between the host and the frontends needs to be implemented and respected.​From now on we'll be referring to micro frontends in the technical form used by Webpack 5: remotes.​The contract is defined by the following rules:​
+
+- The host retrieves the list of remotes dynamically and asynchronously
+- The host is responsible of loading the remotes.
+- The host shares some context with the remotes (routing, auth)
+- The remotes have unique names
+- The remotes are deployed in different urls
+- The remotes do not use global css rules
+- The remotes export themselves as defined by the modules Federation rules
+- The remotes share the same react (and some library) version​When these rules are respected, there is virtually no limit to how the SPA can grow.​Most of the basic dependencies used in each frontend is provided by the host. That makes it easy when they need to be upgraded.​Each application is built independently from the others; the CI/CD pipeline remains fast, atomic deployments do not require complex setups and each remote is released at it's own pace with no need to modify the host in any way.​
+
+### Live example hosted on a CDN:
+ - Live example: [https://microfrontend-shell-boilerplate.vercel.app/](https://microfrontend-shell-boilerplate.vercel.app/)
+
