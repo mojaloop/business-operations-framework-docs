@@ -55,4 +55,4 @@ Management interface for settlement.
 1. **Reporting and analytics**
 
 ## IaC 4.xx - Context
-The next version of "Infrastrcuture as Code" project plans on using a different set of tools than those currently in use in the Mojaloop Community; i.e. WS02 with it’s IS-KM and the HAproxy implementations are to be replaced with Keycloak, Ambassador - Envoy tools. This design is compatible with the next IaC version.
+The next version of "Infrastrcuture as Code" project plans on using a different set of tools than those currently in use in the Mojaloop Community; i.e. WSO2 with its IS-KM and the HAproxy implementations are to be replaced with Keycloak, Ambassador - Envoy tools. This design is compatible with the next IaC version.
