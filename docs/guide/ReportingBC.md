@@ -36,7 +36,7 @@ There are three approaches as that can be adopted to acommodate this change. How
 2. Extending the message event processor to capture the required information in the reporting database.
 3. Call newly defined bounded context APIs, to retrieve the required data.
 
-## Use cases
+## Use cases to support the tracing of a transfer
 In order to effectively trace a transfer end to end, the following four use cases where defined to enable this.
 1. **Dashboard view use case**
 **As a** Hub Operator Business Operations Specialist,
