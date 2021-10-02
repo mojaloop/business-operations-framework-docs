@@ -23,8 +23,6 @@ In addition to this the following have also been engineered and are normally par
 1. uses dynamically loaded microfront ends, so updating to latest version is automatic
 
 ## Technology Stack
-
-
 1. **React** 
 The framework is based on the React library.
 This is the most popular single page application library in use, and additionally this choice allows us to capitalise on other community efforts facilitating an easy conversion into this library.
@@ -54,11 +52,10 @@ The host and the children apps can be deployed on the same cluster or on differe
 There are various CDNs available that are compatible with Kubernetes.
 
 ## Webpack building
-
 The host and the children apps include scripts to build the distribution artifacts.
 The build can be done in the developer host machine, in the CI and in Docker.
-## Micro frontend loading 
 
+## Micro frontend loading 
 The host is responsible for loading the children apps at runtime.
 It gathers information about the available children at runtime, from either an api or a registry.
 
@@ -68,8 +65,6 @@ The individual micro frontends won’t be loaded when not necessary (e.g. when a
 
 **High level sequence diagram illustrating how the microservices are loaded.**
 ![High level sequence diagram illustrating how the microservices are loaded.](../.vuepress/public/microfrontendloading.png)
-
-
 
 ### Repository of micro frontends
 In order to provide a centralized authority responsible for controlling the individual micro frontends meeting the necessary requirements, it is suggested to build a solution that works as a registry.
@@ -81,9 +76,7 @@ The registry would serve the following purposes:
 3. provide informations around the versions of the available micro frontends
 This does not exist yet, nor does it make sense to create at this time, however 
 
-
 ## Deployments
-
 Overview Diagram showing the deployment of the micro frontends to a CDN.
 ::: warning Note:
 The deployment of the bounded context API is not covered in this diagram.
@@ -92,13 +85,16 @@ The deployment of the bounded context API is not covered in this diagram.
 
 The micro frontends use atomic deployments and no full-build is ever required.
 Each individual micro frontend deploys independently from the other ones.
-### CI/CD Continuous Integration / Continuous Delivery 
 
+### CI/CD Continuous Integration / Continuous Delivery 
 Each micro frontend has its own CI/CD setup; there is no requirement to share the same setup or use the same CI tool.
 
 The CI/CD can be configured in order to support multiple environments e.g. DEV, QA, PROD.
 
-Here is an example file showing a git action workflow. ...
+Here is an example file showing a git action workflow. 
+To adopt you will need to change:
+- The branch name that is tied to your release. In the example below it is 'master'.
+- Edit the environment variables as explained [here](https://github.com/mojaloop/microfrontend-shell-boilerplate/blob/master/docs/environment-variables.md).
 
 ```yml
 # This is a basic workflow to help you get started with Actions
@@ -157,11 +153,11 @@ jobs:
 #        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 ```
 ### CDNs
-
 The resulting SPA is served by a CDN or multiple CDNs. Individual micro frontends can live in different CDNs.
-### Kubernetes
 
+### Kubernetes
 The resulting SPA can run and be served in one or more Kubernetes environments.
+
 ### Host application
 The host application comes with a pre-configured setup out of the box. It doesn’t need any particular configuration different from a traditional SPA more than the Webpack 5 Module Federation configuration.
 
@@ -170,6 +166,27 @@ It will be acting as the orchestrator, loading the remote micro frontends and pr
 There is virtually no limit on how the host can grow and how much can be extended.
 It is suggested however to centralize all the host-child communication and shared components in an external library so that both host and children have the same knowledge and integration won’t break.
 
+### Versioning microfrontends
+​The suggested approach is to build a registry where individual apps are registered. The registry would allow to set some configuration on each app and keep track of all the available versions.
+​
+It would then expose and api consumed by the host, providing informations around the available microfrontends, the versions and the artifact locations.
+​
+The registry would be administered by a trusted operator through a user interface; it would be the trusted operator responsibility to decide which version of each individual app would be made public and available to the host to load.
+It would also allow to easily test versions and rollback when necessary, all that without needing to rebuild and redeploy the apps.
+​
+**Note** The JS build artifacts created by Webpack do not include the version in the filename. It's could be necessary to upgrade the build in order to differentiate versions. A simpler approach that do not require to update the build configuration would be hosting the versions on different URLs.
+​
+### Upgrading the host
+​The host is pretty much self isolated and the only necessary thing to do proper versioning is to use the built in command `yarn version`. It will create a new git tag and increment the `package.json` version accordingly to how the command is used (interactive CLI).
+​
+### Upgrading the remotes
+​The remotes are self isolated and the only necessary thing to do proper versioning is to use the built in command `yarn version`. It will create a new git tag and increment the package.json version accordingly to how the command is used (interactive CLI).
+
+### Menu / App composition
+​The host is configured to dinamically build the Menu and the Pages (with react-router) structure. Currently the _Menu_ component(s) is imported from the `@modusbox/react-components` library.
+​
+It's not strictly necessary to use such component and the host / remotes could use custom components, as long as they allow dynamic composition and supports routing.
+​​
 ## Git repositories
 Here is a list of Git repositories that are part of this implementation:
 
@@ -181,7 +198,6 @@ Library shared with both the shell application and the microfrontend.
  - [Reporting-Hub BizOps Transaction Tracing Micro frontend](https://github.com/mojaloop/reporting-hub-bop-trx-ui)
   
 ## Micro frontend motivation in more detail
-
 ​Building scalable and distributed user interfaces is complicated; logic complexity, testing setups, build and deployment costs increase over time.​Architectural decisions taken in the initial phase can be later raise unnecessary complexity and highly affect development costs in later stages.​Further more, a single project does not scale well with distributed teams co-working on the same codebase.​Switching to a microfrontend setup can solve all the above issues; it scales well, atomic deployments do not need a full build and independent teams can use different codebases.​​
 
 ### What defines a micro frontend
