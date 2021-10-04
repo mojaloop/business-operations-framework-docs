@@ -173,28 +173,30 @@ The host application comes with a pre-configured setup out-of-the-box. It does n
 It will be acting as the orchestrator, loading the remote micro-frontends and providing them with app-wide functionality, for example, authentication, RBAC, client-side routing.
 
 There is virtually no limit on how the host can grow and how much can be extended.
-It is suggested however to centralize all the host-child communication and shared components in an external library so that both host and children have the same knowledge and integration won’t break.
+It is suggested, however, to centralize all the host-child communication and shared components in an external library so that both host and children have the same knowledge and integration will not break.
 
-### Versioning microfrontends
+### Versioning micro-frontends
 ​The suggested approach is to build a registry where individual apps are registered. The registry would allow to set some configuration on each app and keep track of all the available versions.
 ​
-It would then expose and api consumed by the host, providing informations around the available microfrontends, the versions and the artifact locations.
+The registry would then expose an API consumed by the host, providing information around the available micro-frontends, the versions, and the artifact locations.
 ​
-The registry would be administered by a trusted operator through a user interface; it would be the trusted operator responsibility to decide which version of each individual app would be made public and available to the host to load.
-It would also allow to easily test versions and rollback when necessary, all that without needing to rebuild and redeploy the apps.
+The registry would be administered by a trusted operator through a user interface; it would be the trusted operator's responsibility to decide which version of each individual app would be made public and available to the host to load.
+It would also allow to easily test versions and roll back when necessary, all that without needing to rebuild and redeploy the apps.
 ​
-**Note** The JS build artifacts created by Webpack do not include the version in the filename. It's could be necessary to upgrade the build in order to differentiate versions. A simpler approach that do not require to update the build configuration would be hosting the versions on different URLs.
+::: tip NOTE
+The JS build artifacts created by Webpack do not include the version in the filename. It could be necessary to upgrade the build in order to differentiate versions. A simpler approach that does not require to update the build configuration would be hosting the versions on different URLs.
+:::
 ​
 ### Upgrading the host
-​The host is pretty much self isolated and the only necessary thing to do proper versioning is to use the built in command `yarn version`. It will create a new git tag and increment the `package.json` version accordingly to how the command is used (interactive CLI).
+​The host is pretty much self-isolated and the only necessary thing to do proper versioning is to use the built-in command `yarn version`. It will create a new git tag and increment the `package.json` version according to how the command is used (interactive CLI).
 ​
 ### Upgrading the remotes
-​The remotes are self isolated and the only necessary thing to do proper versioning is to use the built in command `yarn version`. It will create a new git tag and increment the package.json version accordingly to how the command is used (interactive CLI).
+​The remotes are self-isolated and the only necessary thing to do proper versioning is to use the built-in command `yarn version`. It will create a new git tag and increment the `package.json` version according to how the command is used (interactive CLI).
 
 ### Menu / App composition
-​The host is configured to dinamically build the Menu and the Pages (with react-router) structure. Currently the _Menu_ component(s) is imported from the `@modusbox/react-components` library.
+​The host is configured to dynamically build the _Menu_ and the _Pages_ (with react-router) structure. Currently, the _Menu_ component(s) is imported from the `@modusbox/react-components` library.
 ​
-It's not strictly necessary to use such component and the host / remotes could use custom components, as long as they allow dynamic composition and supports routing.
+It is not strictly necessary to use such components and the host / remotes could use custom components, as long as they allow dynamic composition and support routing.
 ​​
 ## Git repositories
 Here is a list of Git repositories that are part of this implementation:
