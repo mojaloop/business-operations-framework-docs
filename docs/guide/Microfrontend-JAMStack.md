@@ -170,7 +170,7 @@ The resulting SPA can run and be served in one or more Kubernetes environments.
 ### Host application
 
 The host application comes with a pre-configured setup out-of-the-box. It does not need any particular configuration different from a traditional SPA more than the Webpack 5 Module Federation configuration.
-It will be acting as the orchestrator, loading the remote micro frontends and providing them with app-wide functionality e.g. auth, RBAC, client side routing.
+It will be acting as the orchestrator, loading the remote micro-frontends and providing them with app-wide functionality, for example, authentication, RBAC, client-side routing.
 
 There is virtually no limit on how the host can grow and how much can be extended.
 It is suggested however to centralize all the host-child communication and shared components in an external library so that both host and children have the same knowledge and integration won’t break.
