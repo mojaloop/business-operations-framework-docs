@@ -340,11 +340,9 @@ To rotate the secret, apply the following procedure:
 
 Several places will need to be changed to the rest-of-deployment-specific URLs or other values. Those places are described in the comments in the example below, as well as other commentary.
 
+How to setup the Proxy ingress is undecided at the time, as it will need to change when the solution is added to the IaC 3.xxx so that area of the config is still unspecified. This leaves the ingress out by default. Changing `ingress.proxy.enabled` to `true` will enable the proxy ingress. See the linked pages at the beginning for options  available for the built-in ingress configuration.
 
-I’m not sure if we can use the built-in Proxy ingress or if we’ll need to define our own ingress pointing at the Proxy service, so I’ve left that area of the config unspecified, which leaves the ingress out by default. You can change `ingress.proxy.enabled` to `true` to enable the proxy ingress. See the linked pages at the beginning for options  available for the built-in ingress configuration.
-
-If TLS needs to be terminated at Oathkeeper, see the `tls` sections in the config documentation, and combine that with secrets and the `deployment.extraVolumes` and `deployment.extraVolumeMounts` values.
-
+If TLS needs to be terminated at Oathkeeper, see the `tls` sections in the [config documentation](https://www.ory.sh/oathkeeper/docs/reference/configuration), and combine that with secrets and the `deployment.extraVolumes` and `deployment.extraVolumeMounts` values.
 Prometheus is at `:9000/metrics` by default, if that is in use.
 
 
@@ -488,21 +486,61 @@ spec:
 ```
 ### Configure Oathkeeper to use Kratos as its cookie Authenticator
 
-For details on Ory Oathkeeper authenticators, see the [documentation here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
+This part of the config above is applicable. Reference documentation for [Ory Oathkeeper authenticators](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
+```yaml
+    authenticators:
+      cookie_session:
+        enabled: true
+        config:
+          # this should be the internal URL of the public Kratos service's whoami endpoint, which might look like the below
+          check_session_url: http://kratos-public/sessions/whoami
+          preserve_path: true
+          # this means we automatically sweep up all the metadata kratos provides for use
+          # in, for example, the JWT, if we ever have more
+          extra_from: "@this"
+          # kratos will be configured to put the subject from the IdP here
+          subject_from: "identity.id"
+          only:
+          - ory_kratos_session
 
+```
 
 ### Configure Oathkeeper to use WSO2 ISKM for token introspection
-Check that a token is valid.
-
-[docs here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn)
+This part of the config above is applicable.
+[Reference documentation here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn)
+```yaml
+      oauth2_introspection:
+        enabled: true
+        config:
+          introspection_url: https://whatever/the/wso2/url/is/oauth2/introspect
+          introspection_request_headers:
+          # see https://is.docs.wso2.com/en/latest/learn/invoke-the-oauth-introspection-endpoint/ for what credentials
+          # will need to be configured here
+          # also, this does not seem to be settable via environment variable, which means it is 
+          authorization: "Basic SOME WORKING AUTH HERE"
+          cache:
+            # disabled to make debugging easier. enable for caching.
+            enabled: false
+            ttl: "60s"
+```
 
 ### Configure Oathkeeper to use Keto as its authorizer
+This part of the config above is applicable.
+Reference documentation [Ory Oathkeeper authorizers.](https://www.ory.sh/oathkeeper/docs/next/pipeline/authz).
+```yaml
+    authorizers:
+      remote_json:
+        enabled: true
+        config:
+          # the check URL for Keto. This will be POST'd to. See https://www.ory.sh/keto/docs/reference/rest-api#operation/postCheck
+          remote: http://internal-keto-url-here/check
 
-For details on Ory Oathkeeper authorizers, see the [documentation here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authz).
+```
 
 
 
 ## Ory Kratos – implementation detail
+**(Work in progress)**
 Ory Kratos is the part of the Ory Implementation suite that manages all the authentication flows.
 It is highly configurable and can connect to a variety and multiple of authentication systems and flows. The [Kratos Documentation](https://www.ory.sh/kratos/docs/next/) explain the extent of the configuration well. I.e. it is likely to cater for your requirements.
 In this workstream project, only the User Login and logout flow are required and implemented. 
