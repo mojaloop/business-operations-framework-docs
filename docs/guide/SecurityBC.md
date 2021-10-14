@@ -340,7 +340,8 @@ To rotate the secret, apply the following procedure:
 
 Several places will need to be changed to the rest-of-deployment-specific URLs or other values. Those places are described in the comments in the example below, as well as other commentary.
 
-How to setup the Proxy ingress is undecided at the time, as it will need to change when the solution is added to the IaC 3.xxx so that area of the config is still unspecified. This leaves the ingress out by default. Changing `ingress.proxy.enabled` to `true` will enable the proxy ingress. See the linked pages at the beginning for options  available for the built-in ingress configuration.
+How to setup the Proxy ingress is undecided at the time, as it will need to change when the solution is added to the IaC 3.xxx so that area of the config is still unspecified. This leaves the ingress out by default. Changing `ingress.proxy.enabled` to `true` will enable the proxy ingress. See the linked pages at the beginning for options available for the built-in ingress configuration.
+
 
 If TLS needs to be terminated at Oathkeeper, see the `tls` sections in the [config documentation](https://www.ory.sh/oathkeeper/docs/reference/configuration), and combine that with secrets and the `deployment.extraVolumes` and `deployment.extraVolumeMounts` values.
 Prometheus is at `:9000/metrics` by default, if that is in use.
@@ -486,7 +487,8 @@ spec:
 ```
 ### Configure Oathkeeper to use Kratos as its cookie Authenticator
 
-This part of the config above is applicable. Reference documentation for [Ory Oathkeeper authenticators](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
+This part of the config above is applicable. Reference documentation for Ory Oathkeeper authenticators is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
+
 ```yaml
     authenticators:
       cookie_session:
@@ -507,7 +509,8 @@ This part of the config above is applicable. Reference documentation for [Ory Oa
 
 ### Configure Oathkeeper to use WSO2 ISKM for token introspection
 This part of the config above is applicable.
-[Reference documentation here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn)
+Reference documentation is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
+
 ```yaml
       oauth2_introspection:
         enabled: true
@@ -526,7 +529,8 @@ This part of the config above is applicable.
 
 ### Configure Oathkeeper to use Keto as its authorizer
 This part of the config above is applicable.
-Reference documentation [Ory Oathkeeper authorizers.](https://www.ory.sh/oathkeeper/docs/next/pipeline/authz).
+Reference documentation about Ory Oathkeeper authorizers is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authz).
+
 ```yaml
     authorizers:
       remote_json:
