@@ -469,16 +469,17 @@ spec:
     - handler: cookie_session
   authorizer:
     handler: remote_json
-    # these will generally be identical for all rules,
-    # except "object" will be changed to the permission ID that is relevant for
-    # this URL
-    payload: |
-    {
-      "namespace": "permission",
-      "object": "PERMISSION IDENTIFIER HERE",
-      "relation": "granted",
-      "subject_id": "{{ print .Subject }}"
-    }
+    config:
+      # these will generally be identical for all rules,
+      # except "object" will be changed to the permission ID that is relevant for
+      # this URL
+      payload: |
+      {
+        "namespace": "permission",
+        "object": "PERMISSION IDENTIFIER HERE",
+        "relation": "granted",
+        "subject_id": "{{ print .Subject }}"
+      }
   mutators:
     # change this to an empty array if the id_token isn't needed, if you want
     - handler: id_token
