@@ -443,6 +443,7 @@ As the flexibility to define third-party services and bounded contexts increases
 The biggest potential issue here is that each match MUST be unique. If a request matches multiple, Oathkeeper will complain. Once a general pattern is picked that results in unique regexes, this will not happen except with user error.
 
 ```yaml
+
 apiVersion: oathkeeper.ory.sh/v1alpha1
 kind: Rule
 metadata:
@@ -468,17 +469,16 @@ spec:
     - handler: cookie_session
   authorizer:
     handler: remote_json
-    config:
-      # these will generally be identical for all rules,
-      # except "object" will be changed to the permission ID that is relevant for
-      # this URL
-      payload: |
-      {
-        "namespace": "permission",
-        "object": "PERMISSION IDENTIFIER HERE",
-        "relation": "granted",
-        "subject_id": "{{ print .Subject }}"
-      }
+    # these will generally be identical for all rules,
+    # except "object" will be changed to the permission ID that is relevant for
+    # this URL
+    payload: |
+    {
+      "namespace": "permission",
+      "object": "PERMISSION IDENTIFIER HERE",
+      "relation": "granted",
+      "subject_id": "{{ print .Subject }}"
+    }
   mutators:
     # change this to an empty array if the id_token isn't needed, if you want
     - handler: id_token
@@ -536,8 +536,6 @@ Reference documentation [Ory Oathkeeper authorizers.](https://www.ory.sh/oathkee
           remote: http://internal-keto-url-here/check
 
 ```
-
-
 
 ## Ory Kratos – implementation detail
  
