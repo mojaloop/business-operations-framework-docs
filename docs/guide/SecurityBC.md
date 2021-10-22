@@ -486,8 +486,8 @@ spec:
 
 ```
 ### Configure Oathkeeper to use Kratos as its cookie Authenticator
+This part of the config above is applicable. Reference documentation for Ory Oathkeeper authenticators is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
 
-This part of the config above is applicable. Reference documentation for [Ory Oathkeeper authenticators](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
 ```yaml
     authenticators:
       cookie_session:
@@ -507,8 +507,8 @@ This part of the config above is applicable. Reference documentation for [Ory Oa
 ```
 
 ### Configure Oathkeeper to use WSO2 ISKM for token introspection
-This part of the config above is applicable.
-[Reference documentation here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn)
+Reference documentation is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
+
 ```yaml
       oauth2_introspection:
         enabled: true
@@ -527,7 +527,8 @@ This part of the config above is applicable.
 
 ### Configure Oathkeeper to use Keto as its authorizer
 This part of the config above is applicable.
-Reference documentation [Ory Oathkeeper authorizers.](https://www.ory.sh/oathkeeper/docs/next/pipeline/authz).
+Reference documentation about Ory Oathkeeper authorizers is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authz).
+
 ```yaml
     authorizers:
       remote_json:
