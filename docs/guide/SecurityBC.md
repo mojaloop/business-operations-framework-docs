@@ -340,8 +340,7 @@ To rotate the secret, apply the following procedure:
 
 Several places will need to be changed to the rest-of-deployment-specific URLs or other values. Those places are described in the comments in the example below, as well as other commentary.
 
-How to setup the Proxy ingress is undecided at the time, as it will need to change when the solution is added to the IaC 3.xxx so that area of the config is still unspecified. This leaves the ingress out by default. Changing `ingress.proxy.enabled` to `true` will enable the proxy ingress. See the linked pages at the beginning for options available for the built-in ingress configuration.
-
+How to setup the Proxy ingress is undecided at the time, as it will need to change when the solution is added to the IaC 3.xxx so that area of the config is still unspecified. This leaves the ingress out by default. Changing `ingress.proxy.enabled` to `true` will enable the proxy ingress. See the linked pages at the beginning for options  available for the built-in ingress configuration.
 
 If TLS needs to be terminated at Oathkeeper, see the `tls` sections in the [config documentation](https://www.ory.sh/oathkeeper/docs/reference/configuration), and combine that with secrets and the `deployment.extraVolumes` and `deployment.extraVolumeMounts` values.
 Prometheus is at `:9000/metrics` by default, if that is in use.
@@ -470,23 +469,23 @@ spec:
     - handler: cookie_session
   authorizer:
     handler: remote_json
-    # these will generally be identical for all rules,
-    # except "object" will be changed to the permission ID that is relevant for
-    # this URL
-    payload: |
-    {
-      "namespace": "permission",
-      "object": "PERMISSION IDENTIFIER HERE",
-      "relation": "granted",
-      "subject_id": "{{ print .Subject }}"
-    }
+    config:
+      # these will generally be identical for all rules,
+      # except "object" will be changed to the permission ID that is relevant for
+      # this URL
+      payload: |
+      {
+        "namespace": "permission",
+        "object": "PERMISSION IDENTIFIER HERE",
+        "relation": "granted",
+        "subject_id": "{{ print .Subject }}"
+      }
   mutators:
     # change this to an empty array if the id_token isn't needed, if you want
     - handler: id_token
 
 ```
 ### Configure Oathkeeper to use Kratos as its cookie Authenticator
-
 This part of the config above is applicable. Reference documentation for Ory Oathkeeper authenticators is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
 
 ```yaml
@@ -508,7 +507,6 @@ This part of the config above is applicable. Reference documentation for Ory Oat
 ```
 
 ### Configure Oathkeeper to use WSO2 ISKM for token introspection
-This part of the config above is applicable.
 Reference documentation is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
 
 ```yaml
@@ -541,10 +539,8 @@ Reference documentation about Ory Oathkeeper authorizers is found [here](https:/
 
 ```
 
-
-
 ## Ory Kratos – implementation detail
-**(Work in progress)**
+ 
 Ory Kratos is the part of the Ory Implementation suite that manages all the authentication flows.
 It is highly configurable and can connect to a variety and multiple of authentication systems and flows. The [Kratos Documentation](https://www.ory.sh/kratos/docs/next/) explain the extent of the configuration well. I.e. it is likely to cater for your requirements.
 In this workstream project, only the User Login and logout flow are required and implemented. 
@@ -556,23 +552,211 @@ It is useful to know that Kratos can also provided flows for:
 - **Profile and Account Management:** Update passwords, personal details, email addresses, linked social profiles using secure flows.
 - **Admin APIs:** Import, update, delete identities.
 ... that may become important in future version of the IaC deployment designs.
- 
+  
+
 ### Deployment details
-Kratos was deployed with a MySQL database because this database was already part of the IaC deployment solution. Kratos can be deployed with other databases.
+The Kratos Helm Chart is described at [ORY Kratos Helm Chart | k8s](https://k8s.ory.sh/helm/kratos.html) and defined at [k8s/helm/charts/kratos at master · ory/k8s · GitHub](https://github.com/ory/k8s/tree/master/helm/charts/kratos). Unlike Oathkeeper, it does not have any related Maester handling a CRD. It does, however, need a database (which can be MySQL, PostgreSQL, CockroachDB, or a few others). The Helm repository is the same as for Oathkeeper, and documented at [ORY Helm Charts | k8s](https://k8s.ory.sh/helm/). A configuration reference is at [Configuration | Ory Kratos](https://www.ory.sh/kratos/docs/reference/configuration), but note that the Helm chart works slightly differently.
 
-### Configuring Login Sessions
-[docs here](https://www.ory.sh/kratos/docs/guides/login-session)
 
-### Configuring Session cookies
-Details of the cookies sessions
-[docs here](https://www.ory.sh/kratos/docs/guides/configuring-cookies)
+In addition to a database, the other major difference for Kratos is that it requires a user interface, in the form of a small web application that handles rendering the current stage of what’s happening with Kratos to the browser and also doing the necessary backend communication to make that happen securely. In our case, the UI we’ll use is very simple, and is never actually visible—all it will do is immediately forward to the one OIDC Identity Provider (IdP) we’ll have configured and receive the related callback. This UI application has already been created and open sourced in the `modusbox` repository, and releases public docker images in the GitHub docker registry. The UI can be found at [GitHub - modusbox/kratos-ui-oidcer: A Kratos UI for forwarding immediately to a single configured OIDC provider](https://github.com/modusbox/kratos-ui-oidcer), and is a very minimal Rust application with excellent test coverage and a tiny docker image (about 5 megabytes, https://github.com/modusbox/kratos-ui-oidcer/pkgs/container/oidcer ). It is referred to as 'Shim' in the above design documentation.
 
-### Configuring Kratos for CORS
-[docs here](https://www.ory.sh/kratos/docs/guides/setting-up-cors)
+For ease of hosting, Kratos and the UI should be mounted on separate paths on the same domain as the main user interface. Alternatively, it is possible to configure them on a different domain and configure Kratos to use cross-domain cookies. This document is written under the assumption the same-domain strategy is chosen.
 
-### Ory Kratos - Ory Oathkeeper integration (OIDC)
-[Kratos docs here](https://www.ory.sh/kratos/docs/guides/zero-trust-iap-proxy-identity-access-proxy)
+### Connecting to the Main UI
+A client must be created in the IdP that supports OIDC authorization code grants.  This client must be configured to redirect either to any URL under the main UI if it supports wildcards, or the specific URL for the path `/kratos/self-service/methods/oidc/callback/idp` (note that the last segment, `idp`, is the provider ID in the config, so both must change together). This client will be used in the helm chart values config.
 
-### Ory Kratos - WSO2 OIDC integration
-[docs here](https://www.ory.sh/kratos/docs/guides/sign-in-with-github-google-facebook-linkedin)
+In order to connect successfully with Kratos, the Main UI must behave as follows:
+
+1. Make a cookies-included request to `/kratos/sessions/whoami` (documented at [HTTP API Documentation | Ory Kratos](https://www.ory.sh/kratos/docs/reference/api/#operation/toSession) ), which returns a 200 and an object containing user metadata if the user is logged in, or a 401 if they are not.
+2. If the user is not logged in, either immediately redirect to or provide a link to `/kratos/self-service/registration/browser`. Note: `registration` in the URL is not a typo. This refers to registration with Kratos, which IdP users will not be initially. If the user already exists, Kratos will automatically follow the login flow instead.
+3. To log out, link the user to `/kratos/self-service/browser/flows/logout`
+
+### Annotated Helm Values
+This configuration assumes the helm deployment’s name is `kratos` and, that the Kratos service is exposed at `/kratos/` on the same domain as the main UI, and that the Kratos UI is exposed at `/auth/` on the same domain as the main UI.
+
+The Helm chart does support ingress creation, but is not covered in the documentation.
+
+```yaml
+deployment:
+  extraVolumes:
+  - name: extra-config
+    configMap:
+      name: kratos-extra-config
+  extraVolumeMounts:
+  - name: extra-config
+    mountPath: /etc/config2
+    readOnly: true
+kratos:
+  # NOTE: helm chart deployment does not seem to automatically pick up
+  # on changes here
+  identitySchemas:
+    # TODO note the domain to be replaced in $id, the url doesn't need to resolve
+    "identity.schema.json": |
+      {
+        "$id": "http://REPLACE_THIS_WITH_SOME_MEANINGFUL_DOMAIN/schema/user",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "A user",
+        "type": "object",
+        "properties": {
+          "traits": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "title": "E-Mail",
+                "type": "string",
+                "format": "email"
+              },
+              "subject": {
+                "title": "Subject",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+  config:
+    identity:
+      default_schema_url: file:///etc/config/identity.schema.json
+    courier:
+      smtp:
+        connection_uri: smtp://unused/
+    # TODO the appropriate database DSN needs to go here, or be wired up via a secret and the environment variable `DSN`
+    dsn: TODO DATABASE DSN HERE
+    hashers:
+      argon2:
+        parallelism: 1
+        iterations: 3
+        # add resources and increase this amount,
+        # if using passwords (vs oidc) in a production context
+        memory: 17000
+        salt_length: 16
+        key_length: 32
+    log:
+      # TODO adjust after successful setup, likely down to info
+      level: trace
+    selfservice:
+      flows:
+        registration:
+          # TODO if the place the UI goes changes, this needs to change
+          ui_url: /auth/
+          after:
+            oidc:
+              hooks:
+              - hook: session
+        logout:
+          after:
+            # TODO the IdP's logout URL should go here, with a redirect encoded into it if that's supported (might not work the same way, this is just an example)
+            default_browser_return_url: https://idp.logout.url.here/logout/path?redirect_uri=https%3A%2F%2Fsomewhere.example.com%2F
+      methods:
+        oidc:
+          enabled: true
+          config:
+            providers:
+            - id: idp
+              provider: generic
+              # TODO both the client_id and client_secret need to be set appropriately to the client supporting authorization code grants with openid
+              # TODO these can alternatively be set via environment variable from a k8s secret
+              client_id: TODO
+              client_secret: TODO
+              mapper_url: file:///etc/config2/oidc.jsonnet
+              # TODO this should be the right IdP URL to perform OIDC discovery on
+              # If the IdP does not support discovery, auth_url and token_url can be set here instead
+              # some IdPs may also need a requested_claims, see Kratos config documentation if there seems to be an issue
+              issuer_url: https://some.public.idp.url.supporting.discovery/might/have/path/
+              scope:
+              # TODO adjust requested scope based on IdP (WSO2) documentation
+              - openid
+        password:
+          enabled: false
+      # TODO set this to the base URL of the main UI
+      default_browser_return_url: "https://somewhere.example.com/"
+    serve:
+      public:
+        # TODO set this to the base URL of the main UI plus the `/kratos` path, will need to be updated if the same-domain approach is not used
+        base_url: "https://somewhere.example.com/kratos"
+  autoMigrate: true
+```
+### JSonnet ConfigMap
+In the Kratos Helm values, it references a ConfigMap `kratos-extra-config` that contains JSonnet (a configuration language) referencing how to transform the IdP’s claims into what Kratos stores about the person. That ConfigMap should contain a key `oidc.jsonnet` with the following contents:
+
+```javascript
+local claims = std.extVar('claims');
+
+{
+  identity: {
+    traits: {
+      email: claims.email,
+      name: claims.name,
+      subject: claims.sub
+    },
+  },
+}
+```
+
+The email and subject claims will probably never need to change, but with some IdPs, the name might be provided differently, in which case that part of the JSonnet will need to be updated. The keys inside `traits` are basically arbitrary (though `subject` has some dependencies elsewhere that would need to be updated), so long as they’re also updated in the schema in the config, but the values are restricted to the list of likely claims inside an OIDC ID Token, and are described in the Kratos documentation. This will probably not come up.
+
+### UI Deployment & Service
+The service will also need to be exposed at an appropriate path, the config assumes `/auth/`, on the same domain as the main UI.
+
+```yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kratos-ui
+  labels:
+    app: kratos-ui
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+  selector:
+    app: kratos-ui
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kratos-ui
+  labels:
+    app: kratos-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kratos-ui
+  template:
+    metadata:
+      labels:
+        app: kratos-ui
+    spec:
+      containers:
+      - name: kratos-ui
+        image: ghcr.io/modusbox/oidcer:latest
+        env:
+        - name: ROCKET_PORT
+          value: "80"
+        - name: ROCKET_REGISTRATION_ENDPOINT
+          # TODO if the kratos helm chart is given a different name than kratos,
+          # the domain will be different here, it should be the domain of the kratos service
+          value: http://kratos-public/self-service/registration/flows
+        ports:
+        - name: http
+          containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+```
+### Ory reference links
+- **Configuring Login Sessions.** [docs here](https://www.ory.sh/kratos/docs/guides/login-session)
+- **Configuring Session cookies.** Details of the cookies sessions [docs here](https://www.ory.sh/kratos/docs/guides/configuring-cookies)
+- **Configuring Kratos for CORS.** [docs here](https://www.ory.sh/kratos/docs/guides/setting-up-cors)
+- **Ory Kratos - Ory Oathkeeper integration (OIDC).** [Kratos docs here](https://www.ory.sh/kratos/docs/guides/zero-trust-iap-proxy-identity-access-proxy)
+- **Ory Kratos - WSO2 OIDC integration.** [docs here](https://www.ory.sh/kratos/docs/guides/sign-in-with-github-google-facebook-linkedin)
 
