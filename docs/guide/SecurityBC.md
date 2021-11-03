@@ -19,7 +19,8 @@ The security design:
 ## Enforcing Maker-Checker
 There are two approaches that can be taken to enforce a maker-checker validation flow.
 1. Enforce using roles and mutually exclusive permissions via security policies. I.e. Makers cannot also be checkers
-1. Enforce in application layer security rules. I.e. Makers cannot also be checkers within the same validation process. This is often implemented in the application layer when assigning makers and/or checkers as defined in a process flow, and by enforcing that a checker cannot be the same person as the maker in a validation flow. I.e. the code that enforces this will exist within each bounded context.
+1. Enforce in application layer security rules; i.e. makers cannot also be checkers within the same validation process. This is often implemented in the application layer when assigning makers and/or checkers as defined in a process flow, and by enforcing that a checker cannot be the same person as the maker in a validation flow. I.e. the code that enforces this will exist within each bounded context.
+
 
 ::: tip RBAC responsibility
 To support this functionality the RBAC system must provide:
