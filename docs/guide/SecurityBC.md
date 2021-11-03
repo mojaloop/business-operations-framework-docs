@@ -9,6 +9,38 @@ The security design:
 1. is compatible with future Infrastructure-as-Code (IaC) deployments
 1. provides activity logging that can be used in an audit
 
+## RBAC Implementation details
+1. Users are assigned one or more roles. A user may 'take on' multiple roles, subject to defined rules.
+1. Roles are assigned Permissions
+1. The Identity and Access Proxy (Ory Oathkeeper) enforces access to endpoints based on permission.
+1. Backend API can optionally check permissions through Keto API.
+1. Mutually exclusive permission sets can be defined in the system to enforce seperation of duties. 
+
+## Enforcing Maker-Checker
+There are two approaches that can be taken to enforce a maker-checker validation flow.
+1. Enforce using roles and mutually exclusive permissions via security policies. I.e. Makers cannot also be checkers
+1. Enforce in application layer security rules; i.e. makers cannot also be checkers within the same validation process. This is often implemented in the application layer when assigning makers and/or checkers as defined in a process flow, and by enforcing that a checker cannot be the same person as the maker in a validation flow. I.e. the code that enforces this will exist within each bounded context.
+
+
+::: tip RBAC responsibility
+To support this functionality the RBAC system must provide:
+1. the User Identifier to that bounded context.
+1. A means for checking authorisation if necessary.
+::: 
+
+### Providing the User Identifier
+The current configuration provides the User Identifier in the header of the API calls. 
+Ory Oathkeeper is configured to use a 'header' mutator. This 'header' mutator will transform the request, allowing you to pass the credentials to the upstream application via the headers. For example the API backends will get the following header in the http requests.
+```
+X-User: wso2-uuid
+```
+
+It is worth pointing out that JWT 'id_token' are also easily supported my modifying the Ory Oathkeeper mutator configuration. The 'id_token' mutator takes the authentication information (e.g. subject) and transforms it to a signed JSON Web Token, and more specifically to an OpenID Connect ID Token. The API backends can verify the token by fetching the (public) key from the /.well-known/jwks.json endpoint provided by the ORY Oathkeeper API.
+
+### Checking authorisation
+All authorisation information is maintained within Ory Keto. Ory Keto has a standard API that can be called to check authorisation. 
+I.e. It answers the question: *'Does this user identifier token have this permission?'*
+
 ## Tools / standards chosen
 Here is a list of standard tools that have been chosen to implement the design.
 1. **Ory Oathkeeper** 
@@ -74,6 +106,42 @@ Here is a diagram illustrating how the high-level architecture would look if thi
 
 ![Architecture overview diagram of security bounded context implementation](../.vuepress/public/BizOps-Framework-IaC-4.xx-&-Mojaloop-13.xx.png)  
 
+## Performance characterisation of the RBAC implementation
+A performance characterisation of the RBAC POC implementation was performed in order to evaluate the extent of the performance overhead that the RBAC security layer has.
+::: tip In summary:
+The RBAC adds 10ms overhead for each API authorisation check per call. 
+If a particular API call requires and additional API based authorisation call, then the overhead is 20ms.
+
+This typically in our test queries ammounted to:
+1. less than 5% for single authorisation checks (Ory Oathkeeper & Ory Keto), 
+1. and less than 10% for double authorisation checks (Ory Oathkeeper & Ory Keto and an aditional Ory Keto call).
+:::
+
+**Characterisation test setup details**
+On the same test infrastructure, identical timed calls were made to the same backend API directly and and through the RBAC implementation.
+Below are the results of the test calls made to the role API with and without RBAC, and POST Transfers API with and without RBAC. The Role API has a single authorisation check that is performed through Ory Oathkeeper that calls Ory Keto. The Transfer API is a graph QL API that has an additional RBAC
+
+**Request Statistics**
+
+|Method|	Name|	# Requests|	# Fails|	Average (ms)|	Min (ms)|	Max (ms)|	Average size| (bytes)	RPS|	Failures/s|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|GET|	Role API|	321|	0|	248|	221|	499|	604|	9.0|	0.0|
+|GET|	Role API RBAC|	320|	0|	262|	232|	418|	604|	8.9|	0.0|
+|POST|	Transfers API|	318|	0|	229|	184|	373|	4873|	8.9|	0.0|
+|POST|	Transfers API RBAC|	314|	0|	240|	194|	406|	4873|	8.8|	0.0|
+| | **Aggregated**|	**1273**|	**0**|	**245**|	**184**|	**499**|	**2723**|	**35.5**|	**0.0**|
+
+
+**Response Time Statistics**
+
+|Method|	Name|	50%ile (ms)|	60%ile (ms)|	70%ile (ms)|	80%ile (ms)|	90%ile (ms)|	95%ile (ms)|	99%ile (ms)|	100%ile (ms)|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|GET|	Role API|	240|	240|	240|	250|	270|	290|	400|	500|
+|GET|	Role API RBAC|	250|	260|	260|	270|	290|	320|	410|	420|
+|POST|	Transfers API|	220|	220|	240|	250|	290|	330|	360|	370|
+|POST|	Transfers API RBAC|	230|	240|	250|	280|	310|	330|	400|	410|
+| |**Aggregated**|	**240**|	**250**|	**250**|	**260**|	**290**|	**320**|	**400**|	**500**|
+
 ## Logging into the UI
 This sequence diagram illustrates the events that occur when a brower attemps to access a backend API. 
 - If the browser is already logged in, then the request is forwarded. 
@@ -95,6 +163,60 @@ In some cases there might be a requirement for a more detailed authorization che
 It is important to note that not all operational APIs will require this level of authorization, and that the Oathkeeper control may or may not be required in this use case.
 
 ![Sequence diagram illustrating how an API client call has its authorization performed](../.vuepress/public/clientgraphql.png) 
+
+## Enforcing mutually exclusive permissions
+The enforcement of mutually exclusive permissions to support the separation of duty and corresponding security of information and management of security policy controls. The implementation of separation of duty creates tighter security but can lead to complexity for the security administrator and the end users who use the system. Enforcing mutually exclusive permissions can reduce and manage this complexity.
+
+An example of mutually exclusive permissions might be a user able to access the Finance Portal and to carry out sensitive functions such as add/withdraw funds should not also have access to audit functions.
+
+### Modelling the exclusion
+It is recommended that this exclusion is modelled as a set of permission - permission exclusions that are enforced globally.
+
+Modelling mutually exclusive permissions can be done a number of ways namely:
+1. User Role - User Role exclusions
+1. User Role - Permission exclusions
+1. Permission - Permission exclusions
+
+Because this functionality has been added to support the segregation/separation of duties, the cleanest way of enforcing this is to have a permission pair exclusion that is globally enforced. With all the other options, there is the possibility that the exclusion can be bypassed with the addition of a new inclusive role. These permissions come in sets, so defining an exclusion set is much simpler and easier to maintain.
+
+### Synthetic Roles Vs Multiple User Roles
+These are two methods that can be used to model RBAC permissions with mutually exclusive permissions.
+1. Dynamically building up a synthetic role for each user based on rules associated with the current assigned roles and their permissions and exclusions.
+1. Defining roles that are associated with user functions. Each user therefore will need to be assigned more than one role. Roles permissions are less likely to change.
+
+The preference is to implement multiple functional roles. This is because it is much simpler to understand, maintain and support this method. Identifying the cause of a loss of permission in a synthetic role because of multiple role assignments subsequent rule applications requires a detailed understanding of the process of how the synthetic roles are calculated and implemented. This is complexity that is avoided with the second option.
+
+### Multiple user role assignments required dynamic checking of exclusions
+Allowing the system administrator to assign more than one role to a user is convenient, flexible and limits the number of roles required within the organisation. This also means that it is possible to violate a mutually exclusive permission by assigning users to roles. Checking and enforcing these exclusions therefore need to be dynamic.
+
+There are a number of places that this dynamic check needs to take place.
+1. On the assignment of a role to a user
+1. On the application of a new role-permission resource definition, or the application of a new security policy that may include a wholesale change of permission and role structures.
+::: tip Note 1:
+If it is possible that a violation can exist in the system, then each time a permission is checked, exclusion violations should also be checked. Currently this is not designed for as it is assumed that 1 & 2 are sufficiently implemented that a violation cannot exist.
+:::
+
+::: tip Note 2: 
+The change control release and testing on lower environments may not catch these violations. Testing for these violations cannot be done on lower environments without first making sure that the user access control is identical in the lower environments which is normally not the case.
+:::
+
+**Keto relation**
+Introduction of a relation that relates two permissions that cannot be held together.
+```
+“permission:X excludes permission:Y#allowed”
+```
+
+**Permission Exclusion Custom Resource Definition**
+A permission exclusion custom resources are consumed by the Role Permission Controller, which will upload the  exclusions into Keto using this relation. Each will contain two sets of permissions, and holding any permission in one set will mean no permission in the other set can be held. This allows for many flexible scenarios, and the simplest scenario of “any person who can do this one thing cannot do this other thing, and vice versa” remains simple to express.
+
+**Role Permission Operator API Validation Check**
+The Role Permission Resource Controller will provide an API that can be used to check a security permission update’s allowability before it is applied. That API will take a proposed change to a particular Role Permission resource and calculate whether or not any existing users would have mutually exclusive permissions after that change, returning the result. This API will be usable by the administrative UI and CI systems to “preflight” changes for likely problems.
+
+**Role Permission Operator Change Enforcement**
+When a role-permission resource is changed, the role-permission operator will first lock the ability to change user role assignments, then perform the same check as the validation API does, and if the resource does not pass the check it will not accept the changes from that resource, instead maintaining the current role permission assignments, and surfacing the issue as an error in the kubernetes API for instrumentation and alerting.
+
+**Conflict Check on User Role Assignment**
+When a user is assigned a role, the user role assignment API will validate that the change does not result in the user having two mutually excluded permissions. If it does, the change will be rejected and an error returned.
 
 ## Assigning roles and participant access to users
 This functionality is implemented in the Roles API service. The following sequence diagram describes how the user role and user participation access is queried and modified through the Roles API. 
@@ -125,12 +247,14 @@ The detailed specification of the Roles API can be found [here](https://docs.moj
 ).
 The GitHub repository of the role assignment service can be found [here](https://github.com/mojaloop/role-assignment-service).
 
-## Assigning permissions to roles
+## Assigning permissions to roles & mutually exclusive permission sets
 The permission to role assignment is stored in a `.yml` file that we are calling a role-resource file (`roleresource.yml`). 
 Access and changes to these role-resource files will be managed through a hosted version control solution like GitHub or GitLab. This is convenient as this keeps a full history of changes and has configurable automatic and manual control points.
 These role-resource files are mapped as Kubernetes custom resource definitions (CRDs) to which a role-permission operator subscribes. Changes to the role-resource files trigger the role-permission operator to update Ory Keto with the corresponding appropriate change. A role can be represented by more than one file if necessary.
 
-Here is an example of a role-resource file:
+There are two types of role resource files, the first contains the role permission assignments and the second the mutually exclusive permission sets.
+
+Here is an example of a permission assignment role-resource file:
 ```yml
 apiVersion: "mojaloop.io/v1"
 kind: MojaloopRole
@@ -250,6 +374,17 @@ We use `"granted"` as the `"relation"` in our current implementation.
 We use `PATCH` instead of `PUT` since `PATCH` works as a bulk create and/or delete.
 :::
 
+### Adding mutually exclusive permisions to Keto
+The mutually exclusive permission sets are also maintained and modelled in Keto using the 'excludes' relation.
+Relation that relates two permissions that cannot be held together are represented with exclusion tuples:
+```
+“permission:X excludes permission:Y#allowed”
+```
+
+::: tip NOTE
+We use `"excludes"` as the `"relation"` to define mutually exclusive permissions.
+:::
+
 ### Calling the standard Keto API to check authorization
 Checking to see if a user has authorization for a privilege or permission is managed by th API gateway, and if necessary can be checked by each bounded context.
 
@@ -273,6 +408,9 @@ Here is the response that comes back:
 "allowed": true/false
 }
 ```
+::: tip Note:
+Mutally excluded permissions don't need to be check excplicitly through a Keto call because the system is maintained in such a way that role-permission assignments can only be defined if mutually exclusive permission sets are not violated.
+:::
 
 ## Ory Oathkeeper – implementation detail
 ### Configuring Oathkeeper for BizOps
