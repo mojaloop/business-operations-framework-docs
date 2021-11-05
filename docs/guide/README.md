@@ -43,10 +43,11 @@ The reference architecture workstream has - through a collaborative process - de
 
 The following elements of the Business Operations framework project are directly contributing to the building of a reference architecture:
 1. **Security bounded context**
-Part of the security bounded context is being built in this workstream.
-The split of the frontend into micro-frontends that can be built, tested, and released independently; empowering teams that create solutions within each bounded context to independently build API functionality and corresponding UI. Customizations and extensions to each bounded context are also easily supported with this design.
+This workstream RBAC implementation used some of the design ideas and seperations as defined in the reference architecture security bounded context. It didn't implement any of the interfaces what are necessry to consider this a security BC implementation.
 2. **Reporting bounded context**
 Part of the reporting bounded context is being built in this workstream.
+
+The split of the frontend into micro-frontends that can be built, tested, and released independently; empowering teams that create solutions within each bounded context to independently build API functionality and corresponding UI. Customizations and extensions to each bounded context are also easily supported with this design.
 
 Here is an overall view of how the operational APIs, experience APIs, and micro-frontends can be combined into the parts that form the Business Operations framework.
 

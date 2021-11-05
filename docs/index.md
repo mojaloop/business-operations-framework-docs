@@ -5,8 +5,8 @@ tagline: Join the collaboration for building a “get started quickly” set of 
 actionText: Technical Guide →
 actionLink: /guide/
 features:
-- title: Security Bounded Context
-  details: This section details how the RBAC security features are implmented in the current Mojaloop version, and how this same design would evolve into the Reference Architecture Mojaloop, and the next planned IaC deployment.
+- title: RBAC Operational API implementation
+  details: This section details how the RBAC security features for the operational API's are implmented in the current Mojaloop version.
 - title: Micro-service and JAMStack UI Framework
   details: This section details the tech stack, and how the elements of the micro-service and JAMStack are implemented.
 - title: Reporting Bounded Context
