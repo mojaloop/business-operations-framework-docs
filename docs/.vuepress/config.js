@@ -89,7 +89,7 @@ module.exports = {
             link: '/Guide/',
           },
           {
-            text: 'Security BC Implementation',
+            text: 'RBAC Operational API implementation',
             link: '/Guide/SecurityBC.html',
           },
           {
