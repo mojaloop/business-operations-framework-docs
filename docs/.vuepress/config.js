@@ -99,6 +99,10 @@ module.exports = {
           {
             text: 'Reporting BC Implementation',
             link: '/Guide/ReportingBC.html',
+          },
+          {
+            text: 'Reporting Developer Guilde',
+            link: '/Guide/ReportDeveloperGuide.html',
           }
         ]
 
@@ -122,6 +126,7 @@ module.exports = {
             'SecurityBC',
             'Microfrontend-JAMStack',
             'ReportingBC',
+            'ReportDeveloperGuide'
           ]
         }
       ],
