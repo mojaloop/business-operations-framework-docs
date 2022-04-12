@@ -25,5 +25,14 @@ This is a process that relies on the existing core-settlement operations to orch
 - Settlement Finalization
 - Settlement Account Balance Adjustments
 
-<insert diagram here>
+![Settlement Business Process](../.vuepress/public/?.png)
 
+## High-level Architecture
+
+![High-level Settlement Architecture](../.vuepress/public/BizOps-Framework-Settlements.png)
+
+## Detailed Sequence Diagram
+
+_Note: this is a placeholder for the detailed sequence diagram_
+
+![Settlement Detailed Process](../.vuepress/public/settlementDetailedProcess.png)
