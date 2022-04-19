@@ -55,4 +55,34 @@ This process needs to occur after the settlement bank has applied the settlement
 
 ![Settlement Detailed Process](../.vuepress/public/settlementProcessAPI.svg) 
 
+There are a couple of processes in the sequence diagram that are worth elaborating on.
+### Determining settlement Model
+This need to first determine which currencies are involved in the settlement seleted, and then choose an appropriate settlement model or list of settlement models.
 
+### Validation of the settlement finalisation data
+The data that is presented as part of the settlement finalisation needs a significant amount of validations on the data. 
+Some validaions check integrity of the data, and these check will fail the process if not passed. Other valications do not prevent the process continuing, however will show warnings that need to be presented to the operator.
+The continuation of the process is only possible once the operator has accepted the confirmed warnings with their resultant effects, and has provided their selected options for how the process should be applied.
+It is for this reason that the validation of the data is a necessary step, and must be referenced when accepting and proceeding with the process.
+
+### Audit information in the current Mojaloop verion
+The process being performed is captured in the settlement reason field, and is therefore available in the audit reports.
+Additionally the user and the references are captured in the extension lists. These too can be queried in the audit reports.
+
+### RBAC
+In order to make full use of the RBAC controls, the above four processes will be implemented as seperate API endpoint & HTTP method combinations. This is to allow a different permissions to be associated with each process.
+
+## Multi-currency support
+How multi-currency settlement are executed, depends on two things:
+1. How the settlment models are constructed?
+Settlement models can be linked to a currency or left un-linked and applicable to all currencies.
+1. How the settlements are initiated?
+Settlement can be initiated with optionally a currency, or optionally a settlement model.
+
+As it is not easy to seperate a settlement once it has been initiated, it is preferable to decide how settlement should be applied, and then design the system accordingly.
+
+::: tip E.g.
+Running a single currency multi-lateral deferred net settlement model, and using test currencies to perform regular platform health tests. Would prefer to have all settlements of test currencies to be created seperately to the real currency. Would prefer not to have to select a currency or settlement model when initiating a settlement.
+This can be achieved by creating a seperate settlement models I.e. one for each test currency, and one for the real currency.
+The default action on initiating the settelment with transaction in both currencies, would be that seperate settlements are initiated. (The determine settlement model whould find both settlement models.)
+:::
