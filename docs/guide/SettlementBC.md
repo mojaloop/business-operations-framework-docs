@@ -83,6 +83,6 @@ As it is not easy to seperate a settlement once it has been initiated, it is pre
 
 ::: tip E.g.
 Running a single currency multi-lateral deferred net settlement model, and using test currencies to perform regular platform health tests. Would prefer to have all settlements of test currencies to be created seperately to the real currency. Would prefer not to have to select a currency or settlement model when initiating a settlement.
-This can be achieved by creating a seperate settlement models I.e. one for each test currency, and one for the real currency.
-The default action on initiating the settelment with transaction in both currencies, would be that seperate settlements are initiated. (The determine settlement model whould find both settlement models.)
+This can be achieved by creating seperate settlement models I.e. one for each test currency, and one for the real currency.
+The default action on initiating the settelment with transaction in both currencies, would be that seperate settlements are initiated. (The determine settlement model function would find both settlement models.)
 :::
