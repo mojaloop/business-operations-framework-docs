@@ -36,16 +36,15 @@ The current settlement window can be closed manually as if there have been trans
 
 1. **Settlement Initiation**
 Settlement Initiation is used by the hub operator to create a settlement batch which controls and drives the settlement process. 
-To initiate the settlment process, the hub operator selects : 
+To initiate the settlement process, the hub operator selects : 
    - a set of settlement windows 
-   - and optionally a settlement currency or a settlment module. (If a settlement currency is provided, then this is used to determine the 
-   settlement module.)
+   - and optionally a settlement currency or a settlement model. (If a settlement currency is provided, then this is used to determine the settlement model.)
 The position ledgers of the net credit participants are adjusted during Settlement Initiation.
 **Note:** It is important to create the batch settlment object in the way that the settlement is to be completed and finalised. 
-1. A **Settlement Matrix report** is generated and used to comunicated to the settlement bank the requirements of the settlement.
+1. A **Settlement initiation report**  is generated and used to comunicated to the settlement bank the requirements of the settlement.
 1. **Settlement Finalization & settlement account rebalancing**
 This process needs to occur after the settlement bank has applied the settlement changes. In this step the:
-   - settlement process is completed. 
+   - settlement process is completed and a settlement finalisation report has been recieved from the settlement bank.
    - the net debit participants in the settlment have their position ledgers adjusted.
    - the settlement ledgers are adjusted for all participants to match the transferred amount for the settlement.
    - the settlement ledgers are checked against the real settlment account balances and adjustments processed to ensure that they are aligned.
