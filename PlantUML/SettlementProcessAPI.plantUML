@@ -35,7 +35,7 @@ List of Settlement windows Ids
 [Optional] Currency or Settlement Model
 end note
 
-ui->el: POST: /initiateSettlement 
+ui->el: POST: /settlements:initiate 
 note left
 {"settlementWindows": [
     {
@@ -45,7 +45,7 @@ note left
  "currency", :"XXX" # (currencyEnum)
  }
 end note
-el->pl: POST: /initiateSettlement 
+el->pl: POST: /settlements:initiate
 note left
 {"settlementWindows": [
     {
@@ -121,7 +121,7 @@ accounts that has not yet been captured in the
 Mojaloop Settlement ledgers.
 end note
 bu -> ui: Validate finalisation file
-ui -> el: Validate finalisation file
+ui -> el: POST: /settlements:finalize
 el -> el: Fatal: Validate file format \n Load file into JSON object
 note left 
 {
@@ -141,7 +141,7 @@ note left
 }
 end note
 
-el -> pl: **Validate finalisation** POST
+el -> pl: **Validate finalisation** POST: /settlements:finalize
 group load settlement data
 pl->moja: Get settlement information \n**GET central-settlements/settlements/{id}**
 pl->moja: Get all participants\n **GET central-ledger/participants**
@@ -171,17 +171,19 @@ el--> ui: Show validation results to user
 ui--> bu: 
 
 bu -> ui: User confirms proceeding with finalisation
-ui -> el: **Confirm Finalisation** PUT 
+ui -> el: **Confirm Finalisation** POST: /settlements:confirmFinalize
 note left
 {
   finalisationId:"GUIDv4", (string)
+  "settlementId" : 10 , # settlement batch id (integer) 
   balanceSettlementOption: true # (boolean)
 }
 end note
-el -> pl: **Confirm Finalisation** PUT 
+el -> pl: **Confirm Finalisation** POST: /settlements:confirmFinalize
 note left
 {
   "finalisationId":"GUIDv4", (string)
+  "settlementId" : 10 , # settlement batch id (integer) 
   "balanceSettlementOption":true, # (boolean)
   "user":"userName" # (string)
 }
