@@ -64,6 +64,33 @@ Some validaions check integrity of the data, and these check will fail the proce
 The continuation of the process is only possible once the operator has accepted the confirmed warnings with their resultant effects, and has provided their selected options for how the process should be applied.
 It is for this reason that the validation of the data is a necessary step, and must be referenced when accepting and proceeding with the process.
 
+### Use cases that need to be catered for in the settlment finalisation
+| Validation Description | Expected behaviour |
+| --- | --- |
+| Selected settlement ID does not match report settlement ID | Abort finalisation with error |
+| Sum of transfers in the report is non-zero | Abort finalisation with error |
+| Transfer amount does not match net settlement amount | Abort finalisation with error |
+| Balance not modified corresponding to transfer amount | Continue --> Adjust Settlement Account Balance to align |
+| Balance provided in the report is not a positive value | Continue --> Set settlement balance to zero; set NCD = 0; disable participant POSITION account |
+| Accounts in settlement not present in report | Abort finalisation with error |
+| Accounts in report not present in settlement | Abort finalisation with error |
+| Participant identifiers do not match - participant ID, account ID and participant name must match | Abort finalisation with error |
+| Account type should be POSITION | Abort finalisation with error |
+| New balance amount not valid for currency | Abort finalisation with error |
+| Transfer amount not valid for currency| Abort finalisation with error |
+| Account ID does not exist in switch | Abort finalisation with error |
+|Attempted to finalize an aborted settlement | Abort finalisation with error |
+| Error processing adjustment for participant | Continue with other participants - notify user of error |
+| Error attempting to set settlement state to PS_TRANSFERS_RECORDED | Continue with other participants - notify user of error |
+| Error attempting to set settlement state to PS_TRANSFERS_RESERVED | Continue with other participants - notify user of error|
+|Error attempting to set settlement state to PS_TRANSFERS_COMMITTED | Continue with other participants - notify user of error|
+|Errors attempting to settle accounts | Continue with other participants - notify user of error|
+| Error attempting to set NDC | Continue with other participants - notify user of error |
+| Error attempting to process funds in/out|Continue with other participants - notify user of error |
+| Balance unchanged after processing funds in/out| Continue with other participants - notify user of error |
+|Incorrect resulting balance after processing funds in/out |Continue with other participants - notify user of error  |
+|Failed to record settlement participant account state |Continue with other participants - notify user of error  |
+
 ### Audit information in the current Mojaloop verion
 The process being performed is captured in the settlement reason field, and is therefore available in the audit reports.
 Additionally the user and the references are captured in the extension lists. These too can be queried in the audit reports.

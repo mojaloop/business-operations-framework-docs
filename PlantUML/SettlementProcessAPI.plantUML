@@ -25,6 +25,7 @@ note left
 windows Id
 end note
 el->moja: Add user information\n POST: /settlementWindows{SettlementWindowId}
+el->moja: Confirm that the settlement window is closed and wait retry with timeout if not.  \nGET central-settlements/settlementWindows/{id}
 el-->ui: Update UI
 == Initiate Settlement ==
 bu->ui: Initiate Settlement for these windows & Currency
@@ -55,9 +56,6 @@ note left
  "user": "hub operators name" # (string) 
  }
 end note
-loop For each settlement window
-pl->moja: Confirm that the settlement window is closed and wait retry with timeout if not.  \nGET central-settlements/settlementWindows/{id}
-end
 group determine settlement Model/s 
 pl->moja: Load currencies for windows using GET central-settlements/settlementWindows/{id}
 pl->moja: Load settlement models using GET central-ledger/settlementModels 
