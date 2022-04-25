@@ -86,23 +86,27 @@ module.exports = {
         items: [
           {
             text: 'Technical Introduction',
-            link: '/Guide/',
+            link: '/guide/',
           },
           {
             text: 'RBAC Operational API implementation',
-            link: '/Guide/SecurityBC.html',
+            link: '/guide/SecurityBC',
           },
           {
             text: 'Micro-frontend - JAMStack design',
-            link: '/Guide/Microfrontend-JAMStack.html',
+            link: '/guide/Microfrontend-JAMStack',
           },
           {
             text: 'Reporting BC Implementation',
-            link: '/Guide/ReportingBC.html',
+            link: '/guide/ReportingBC',
           },
           {
-            text: 'Reporting Developer Guilde',
-            link: '/Guide/ReportDeveloperGuide.html',
+            text: 'Reporting Developer Guide',
+            link: '/guide/ReportDeveloperGuide',
+          },
+          {
+            text: 'Settlement Ops Implementation',
+            link: '/guide/SettlementBC',
           }
         ]
 
@@ -126,7 +130,11 @@ module.exports = {
             'SecurityBC',
             'Microfrontend-JAMStack',
             'ReportingBC',
-            'ReportDeveloperGuide'
+            'ReportDeveloperGuide',
+            {
+              title: "Settlement Ops Implementation",
+              path: 'SettlementBC'  
+            }
           ]
         }
       ],

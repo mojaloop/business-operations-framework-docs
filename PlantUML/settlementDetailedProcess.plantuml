@@ -1,0 +1,112 @@
+@startuml settlementDetailedProcess
+skinparam activityFontSize 4
+skinparam activityDiamondFontSize 30
+skinparam activityArrowFontSize 24
+skinparam defaultFontSize 24
+skinparam noteFontSize 24
+skinparam monochrome true
+autonumber
+
+title src/App/Settlement/sagas.ts -finalizeSettlement()
+
+actor "BOP User" as bu
+
+box reporting-hub-bop-settlements-ui
+participant "settlements-sagas" as ss
+participant "State" as s
+end box
+participant "Mojaloop Switch" as sw
+
+bu -> ss: Process
+
+ss -> s: select(getSettlementAdjustments)
+s --> ss: return select(getSettlementAdjustments)
+ss -> ss: Set debits and credits \n from \n select(getSettlementAdjustments)
+
+ss -> sw: GET centralLedgerURL/participants
+sw -> ss: PUT callback for centralLedgerURL/participants
+ss -> ss: Set participantsResult to PUT payload
+ss -> ss: Assert all accounts have ID
+
+== case SettlementStatus.PendingSettlement ==
+ss -> s: yield put(setFinalizingSettlement({settlement,state: SettlementStatus.PendingSettlement,}),)
+ss -> sw: PUT centralSettlementsURL/settlements/${settlementId} \n setting each participant account state to PS_TRANSFERS_RECORDED
+sw -> ss: PUT callback for centralSettlementsURL/settlements/${settlementId}
+ss -> ss: Assert if result status is a non 200 https status code and throw new error
+
+== case SettlementStatus.PsTransfersRecorded ==
+ss -> s: yield put(setFinalizingSettlement({settlement,state: SettlementStatus.PsTransfersRecorded,}),)
+ss -> sw: PUT centralSettlementsURL/settlements/${settlementId} \n setting each participant account state to PS_TRANSFERS_RESERVED
+sw -> ss: PUT callback for centralSettlementsURL/settlements/${settlementId}
+ss -> ss: Assert if result status is a non 200 https status code and throw new error
+
+== case SettlementStatus.PsTransfersReserved ==
+
+ss -> s: select(getFinalizeProcessNdcIncreases)
+s --> ss: return select(getFinalizeProcessNdcIncreases)
+ss -> ss: Set increases from \n select(getFinalizeProcessNdcIncreases)
+
+ss -> s: select(getFinalizeProcessNdcDecreases)
+s --> ss: return select(getFinalizeProcessNdcDecreases)
+ss -> ss: Set decreases from \n select(getFinalizeProcessNdcDecreases)
+
+ss -> s: select(getFinalizeProcessFundsInOut)
+s --> ss: return select(getFinalizeProcessFundsInOut)
+ss -> ss: Set adjustLiquidityAccountBalance \n from \n select(getFinalizeProcessFundsInOut)
+
+ss -> ss: yield call(processAdjustments,...debits) return debtors errors if any
+
+ss -> ss: Assert and throw error if there is any debtor error
+
+ss -> s: select(getFinalizeProcessFundsInOut)
+s --> ss: return select(getFinalizeProcessFundsInOut)
+ss -> ss: Set adjustLiquidityAccountBalance \n from \n select(getFinalizeProcessFundsInOut)
+
+ss -> ss: yield call(processAdjustments,...credits) return creditors errors if any
+
+ss -> ss: Assert and throw error if there is any creditor error
+
+ss -> sw: GET centralSettlementsURL/settlements/${settlementId}
+sw -> ss: PUT callback for centralSettlementsURL/settlements/${settlementId}
+ss -> ss: Set newSettlement to PUT payload
+ss -> ss: Assert if able to retrieve settlement
+
+ss -> ss: Loop all participant accounts in newSettlement and call following PUT \n for accounts in PENDING_SETTLEMENT, PS_TRANSFERS_RECORDED \n and PS_TRANSFERS_RESERVED state and amount=0
+ss -> sw: PUT centralSettlementsURL/settlements/${settlementId}/participants/${participantId}/accounts/${accountId}
+sw -> ss: PUT callback for centralSettlementsURL/settlements/${settlementId}/participants/${participantId}/accounts/${accountId}
+ss -> ss: Assert if any account update result in a non 200 https status and throw new error
+
+ss -> s: yield put(setSettlementFinalizingInProgress(false))
+
+== case SettlementStatus.PsTransfersCommitted ==
+ss -> ss:
+note right
+  "We could transition to PS_TRANSFERS_COMMITTED,"
+  "but then we'd immediately transition to"
+  "SETTLING anyway, so we do nothing here."
+end note
+== case SettlementStatus.Settling ==
+ss -> s: yield put(setFinalizingSettlement({...settlement, state: SettlementStatus.Settling, }), )
+
+ss -> ss: Loop all participant accounts and call following PUT \n for accounts not in SETTLED state
+ss -> sw: PUT centralSettlementsURL/settlements/${settlementId}/participants/${participantId}/accounts/${accountId}
+sw -> ss: PUT callback for centralSettlementsURL/settlements/${settlementId}/participants/${participantId}/accounts/${accountId}
+ss -> ss: Assert if any account update result in a non 200 https status and throw new error
+
+ss -> sw: GET centralSettlementsURL/settlements/${settlementId}
+sw -> ss: PUT callback for centralSettlementsURL/settlements/${settlementId}
+ss -> ss: Set result to PUT payload
+
+ss -> ss: Loop(potential infinite loop) until result state is SETTLED, \n sleep 5000 mill and check again
+ss -> sw: GET centralSettlementsURL/settlements/${settlementId}
+sw -> ss: PUT callback for centralSettlementsURL/settlements/${settlementId}
+
+== case SettlementStatus.Settled ==
+ss -> s: yield put(setFinalizingSettlement({...settlement, state: SettlementStatus.Settled,}),)
+== case SettlementStatus.Settled - END ==
+
+ss -> s: yield put(setSettlementFinalizingInProgress(false))
+
+ss --> bu: Settlement \n Process \n Completed
+
+@enduml

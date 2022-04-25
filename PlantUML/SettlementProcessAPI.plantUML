@@ -1,0 +1,248 @@
+@startuml settlementProcessAPI
+skinparam activityFontSize 4
+skinparam activityDiamondFontSize 30
+skinparam activityArrowFontSize 24
+skinparam defaultFontSize 24
+skinparam noteFontSize 24
+skinparam monochrome true
+autonumber
+
+title Settlement Process
+
+actor "Business Hub Operator User" as bu
+
+participant "Settlement Bank" as sbank
+participant "Micro-frontend" as ui
+participant "Experience Layer" as el
+participant "Process Layer" as pl
+participant "Report API" as report
+participant "Mojaloop" as moja
+
+== Close a settlement window ==
+bu->ui: User clicks close Settlement Window
+ui->el: Close Settlement Window
+note left
+windows Id
+end note
+el->moja: Add user information\n POST: /settlementWindows{SettlementWindowId}
+el->moja: Confirm that the settlement window is closed and wait retry with timeout if not.  \nGET central-settlements/settlementWindows/{id}
+el-->ui: Update UI
+== Initiate Settlement ==
+bu->ui: Initiate Settlement for these windows & Currency
+
+note left
+List of Settlement windows Ids
+[Optional] Currency or Settlement Model
+end note
+
+ui->el: POST: /settlements:initiate 
+note left
+{"settlementWindows": [
+    {
+      "id": 0
+    }], #settlement window id's (integer)
+ "settlementModel":"defered net", # (string)
+ "currency", :"XXX" # (currencyEnum)
+ }
+end note
+el->pl: POST: /settlements:initiate
+note left
+{"settlementWindows": [
+    {
+      "id": 0
+    }], #settlement window id's (integer)
+ "settlementModel":"defered net", # (string)
+ "currency", :"XXX" # (currencyEnum)
+ "user": "hub operators name" # (string) 
+ }
+end note
+group determine settlement Model/s 
+pl->moja: Load currencies for windows using GET central-settlements/settlementWindows/{id}
+pl->moja: Load settlement models using GET central-ledger/settlementModels 
+pl->pl: Determine minimum list of settlement models
+end
+
+loop for settlement models
+pl->moja: Create settlement \n **POST: central-settlements/settlements** \n{settlementModel, settlementWindowIds[]}
+pl->moja: Advance settlement participant account\n state to PS_TRANSFERS_RECORDED \n **PUT: central-settlements/settlements/{id}**
+note right moja
+**Net credit** participant 
+position ledgers are adjusted
+end note
+end loop
+pl-->el: Return reponse, success HTTP:200
+note right
+ {
+   [
+     "SettlementModel":"defered-net" #(string)
+     "id":null, # optional (integer)
+     "state": "state" # optional (string)
+     "errorInformation": { # optional
+        "errorCode": 0,
+        "errorDescription": "string",
+        "extensionList": {
+          "extension": [
+            {
+              "key": "string",
+              "value": "string" } ] } }
+    ]
+ }
+
+end note
+el-->ui: Update UI with settlement status
+
+== Generate Settlement Matrix Report ==
+bu->ui: Settlement Initiation Report Download
+ui->el: Add User
+el->report: Settlement Initiation Report Download
+report-->ui: report is downloaded
+ui-->bu:report is downloaded
+bu->sbank:
+note left
+Report is sent to 
+**settlement bank** to begin 
+the settlement transfers 
+between participants
+end note
+
+== Finalise Settlement ==
+sbank-->bu: 
+note right
+The **Settlement Bank** has completed making
+transfers between participants.
+The **finalisation report** that is recieved from 
+the Settlement Bank, includes the settlement account 
+balances after all the transfers have been processed.
+
+It is possible that these account balances are not
+as expected. This would indicate that an **additional** 
+**funds in / funds out** has occured in the settlement 
+accounts that has not yet been captured in the 
+Mojaloop Settlement ledgers.
+end note
+bu -> ui: Validate finalisation file
+ui -> el: POST: /settlements:finalize
+el -> el: Fatal: Validate file format \n Load file into JSON object
+note left 
+{
+  "finalisationReference":"SettlementFinalisationFilename.xlsx" # (string),
+  "settlementId" : 10 , # settlement batch id (integer) 
+  "participants" : [
+    { 
+      "name": "payerfsp",# mojaloop participant name (string) 
+      "id": 1, # mojaloop database id (integer)
+      "settlementAccountId": 1, # settlement account id for participant (integer)
+      "externalBalance": 10000, # external balance of settlement account (number)
+      "netSettlementAmount": {
+            "amount": 0, # number
+            "currency": "XXX" # currency string (CurrencyEnum)
+          }
+    }  ] # all participants that are involved in the settlement
+}
+end note
+
+el -> pl: **Validate finalisation** POST: /settlements:finalize
+group load settlement data
+pl->moja: Get settlement information \n**GET central-settlements/settlements/{id}**
+pl->moja: Get all participants\n **GET central-ledger/participants**
+pl->moja: Get all participants limits\n **GET central-ledger/participants/limits**
+pl->moja: For each participant get account balance\n **GET central-ledger/participants/{name}/accounts**
+end
+group Process validation 
+pl -> pl: Fatal: Validate Participants and their \n accounts ids are valid, match, \nand are the correct type, and correct currency
+pl -> pl: Fatal: Validate Settlement Id non-matching
+pl -> pl: Fatal: Validate Participant Settlement data \ntransfer sum is zero
+pl -> pl: Fatal: Validate Participant Settlement data \nmatches net settlement amount
+end
+group Calculate Adjustments and Warnings
+pl -> pl: Non fatal: Validate Participant Settlement \nbalance is expected \n Return warnings if there are discrepencies
+pl -> pl: Non fatal: Validate Participant Settlement \nbalance is zero or positive
+end 
+pl--> el: Return finalisation validation results
+note right
+  {
+    "finalisationId": "GUIDv4", # Guid version 4 (string)
+    "valid":true, # (boolean) true if none failure error
+    "errors": [{"type": "string", "message": "description", "errorInformation": {...}}],
+    "warnings": [{"type": "string", "message": "description", "errorInformation": {...}}]
+  }
+end note
+el--> ui: Show validation results to user
+ui--> bu: 
+
+bu -> ui: User confirms proceeding with finalisation
+ui -> el: **Confirm Finalisation** POST: /settlements:confirmFinalize
+note left
+{
+  finalisationId:"GUIDv4", (string)
+  "settlementId" : 10 , # settlement batch id (integer) 
+  balanceSettlementOption: true # (boolean)
+}
+end note
+el -> pl: **Confirm Finalisation** POST: /settlements:confirmFinalize
+note left
+{
+  "finalisationId":"GUIDv4", (string)
+  "settlementId" : 10 , # settlement batch id (integer) 
+  "balanceSettlementOption":true, # (boolean)
+  "user":"userName" # (string)
+}
+end note
+
+loop for each settlement debit participant
+' pl->moja: [Remove if Liquidity adjustment includes settlement account check]\nadjust ndc: PUT /participants/{name}/limits
+alt if balanceSettlementOption is true 
+pl->moja: Adjust settlment account according to settlement (funds Out)\n POST central-ledger/participants/{name}/accounts/{id}\nConfirm PUT /participants/{name}/accounts/{id}/transfers/{transferId}
+end
+
+pl->moja: Advance state to Settled\nPUT central-settlements/settlements/{sid}/participants/{pid}/accounts/{aid} \n PUT /settlements/{sid}/participants/{pid}
+note right moja
+**Net debit** participant 
+   position ledgers are adjusted
+end note
+
+end loop
+loop for each settlement credit participant
+' pl->moja: [Remove if Liquidity adjustment includes settlement account check]\n adjust ndc: PUT /participants/{name}/limits
+alt if balanceSettlementOption is true 
+pl->moja: Adjust settlment account according to settlement (funds In)\n POST /participants/{name}/accounts/{id}
+end
+note left pl
+  reason: "Settlement Finanisation"
+  extension list: 
+    [ { 'key'='user', 'value'='username'},
+      { 'key'='reference', 'value'='finalisatonReference'} ]
+end note
+pl->moja: Advance state to Settled\nPUT central-settlements/settlements/{sid}/participants/{pid}/accounts/{aid} \n PUT /settlements/{sid}/participants/{pid}
+end loop
+alt if balanceSettlementOption is true 
+loop For each participant rebalance Settlement account  
+pl->moja: Get latest balance \n **GET central-ledger/participants/{name}/accounts**
+pl->moja: if < actual balance then\n increase balance (funds In)\n POST central-ledger/participants/{name}/accounts/{id}
+pl->moja: if > actual balance then\n decrease balance (funds Out)\n POST central-ledger/participants/{name}/accounts/{id}\nConfirm PUT /participants/{name}/accounts/{id}/transfers/{transferId}
+note left pl
+  reason: "Settlement Rebalance"
+  extension list: 
+    [ { 'key'='user', 'value'='username'},
+      { 'key'='reference', 'value'='finalisatonReference'} ]
+end note
+pl->moja: Confirm correct balance\n **GET central-ledger/participants/{name}/accounts**
+end 
+end
+
+pl-->el: Response
+note right 
+  {
+    "state": "string",
+    "participants" : [
+    { 
+      "name": "payerfsp",# mojaloop participant name (string) 
+      "id": 1, # mojaloop database id (integer)
+      "settlementAccountId": 1, # settlement account id for participant (integer)
+      "errors": [{"type": "string", "message": "description", "errorInformation": {...}}] # errorInformation std fspiop error information object
+    }]
+  }
+end note
+el-->ui: Settlement \n Process \n Completed (Update settlement Status or display errors)
+
+@enduml
