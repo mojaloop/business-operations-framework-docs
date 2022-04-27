@@ -123,3 +123,52 @@ Running a single currency multi-lateral deferred net settlement model, and using
 This can be achieved by creating separate settlement models I.e. one for each test currency, and one for the real currency.
 The default action on initiating the settlement with transaction in both currencies, would be that separate settlements are initiated. (The determine settlement model function would find both settlement models.)
 ___
+
+
+## Error Cases 
+### Initiate Settlement
+
+![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessInitiationErrors.svg)
+
+| Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
+|------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
+| Settlement ID not found                                                | 3002        | 400              |  Request Validation Error                                 |
+| Currency not valid                                                     | 3002        | 400              |  Request Validation Error                                 |
+| SettlementModel not found                                              | 3002        | 400              |  Request Validation Error                                 |
+| Not able to create settlement                                          | 3003        | 500              |  Internal Server Error                                    |
+| Not able to update settlement state                                    | 3003        | 500              |  Internal Server Error                                    |
+| Technical error while communicating with mojaloop services             | 3003        | 500              |  Technical Error                                          |
+
+
+### Finalize Settlement
+
+![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessFinaliseErrors.svg)
+
+1. **Validate**
+
+| Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
+|------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
+| Settlement ID not found                                                | 3002        | 400              |  Request Validation Error                                 |
+| Participant IDs not found                                              | 3002        | 400              |  Request Validation Error                                 |
+| Participant Account IDs not found                                      | 3002        | 400              |  Request Validation Error                                 |
+| Technical error while communicating with mojaloop services             | 3003        | 500              |  Technical Error                                          |
+| Selected settlement ID does not match report settlement ID             | 3002        | 500              |  Process Validation Error                                 |
+| Sum of transfers in the report is non-zero                             | 3002        | 500              |  Process Validation Error                                 |
+| Transfer amount does not match net settlement amount                   | 3002        | 500              |  Process Validation Error                                 |
+| Participant IDs in report not matching participant IDs in settlement   | 3002        | 500              |  Process Validation Error                                 |
+| Accounts in the report not matching with accounts in the settlement    | 3002        | 500              |  Process Validation Error                                 |
+| New balance amount not valid for currency                              | 3002        | 400              |  Process Validation Error                                 |
+| Transfer amount not valid for currency                                 | 3002        | 400              |  Process Validation Error                                 |
+| Settlement is in ABORTED or invalid state                              | 3002        | 400              |  Process Validation Error                                 |
+| Transfer amount not valid for currency                                 | 3002        | 400              |  Process Validation Error                                 |
+
+2. **Confirm**
+
+| Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
+|------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
+| Finalisation ID not found                                              | 3002        | 400              |  Request Validation Error                                 |
+| Settlement ID not found                                                | 3002        | 400              |  Request Validation Error                                 |
+| Technical error while communicating with mojaloop services             | 3003        | 500              |  Technical Error                                          |
+| Error while funds out                                                  | 3002        | 500              |  Internal Server Error                                    |
+| Not able to update settlement state                                    | 3003        | 500              |  Internal Server Error                                    |
+| Balances not matching after settlement                                 | 3002        | 500              |  Internal Server Error                                    |
