@@ -129,6 +129,7 @@ ___
 ### Initiate Settlement
 
 ![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessInitiationErrors.svg)
+**Error Codes:**
 
 | Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
 |------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
@@ -143,8 +144,9 @@ ___
 ### Finalize Settlement
 
 ![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessFinaliseErrors.svg)
+**Error Codes:**
 
-1. **Validate**
+1. **Validate Phase**
 
 | Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
 |------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
@@ -162,7 +164,7 @@ ___
 | Settlement is in ABORTED or invalid state                              | 3100        | 500              |  Process Validation Error                                 |
 | Transfer amount not valid for currency                                 | 3100        | 500              |  Process Validation Error                                 |
 
-2. **Confirm**
+2. **Confirm Phase**
 
 | Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
 |------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
