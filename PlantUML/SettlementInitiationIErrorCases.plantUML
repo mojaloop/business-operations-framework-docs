@@ -50,50 +50,61 @@ note left
 end note
 group determine settlement Model/s 
 pl->moja: Load currencies for windows using GET central-settlements/settlementWindows/{id}
-pl->moja: Load settlement models using GET central-ledger/settlementModels 
-pl->pl: Determine minimum list of settlement models
+pl->moja: Load settlementModels using GET central-ledger/settlementModels 
+pl->pl: Determine minimum list of settlementModels, return a map for each settlementModel containing a list of applicable settlementWindows
 end
+pl->pl: Validate
+alt Validation Error
+  pl-->el: Return Error HTTP: 400
 
-loop for settlement models
-pl->moja: Create settlement \n **POST: central-settlements/settlements** \n{settlementModel, settlementWindowIds[]}
-pl->moja: Advance settlement participant account\n state to PS_TRANSFERS_RECORDED \n **PUT: central-settlements/settlements/{id}**
-note right moja
-**Net credit** participant 
-position ledgers are adjusted
-end note
-end loop
-
-alt Success
-pl-->el: Return response, sucess HTTP:200
-note right
- {
-   [
-     "SettlementModel":"defered-net" #(string)
-     "id":null, # optional (integer)
-     "state": "state" # optional (string)
- }
-end note
-else Error
- pl-->el: Return Error HTTP: code
-
-note right
- {
-   [
-     "SettlementModel":"defered-net" #(string)
-     "id":null, # optional (integer)
-     "state": "state" # optional (string)
-     "errorInformation": { # optional
-        "errorCode": 0,
+  note right
+    {
+      "errorInformation": { 
+        "errorCode": 3100,
         "errorDescription": "string",
         "extensionList": {
           "extension": [
             {
               "key": "string",
-              "value": "string" } ] } }
-    ]
- }
+              "value": "string" 
+            }
+          ] 
+        }
+      }
+    }
 
-end note
+  end note
+else Validation Success
+  loop for settlement models
+  pl->moja: Create settlement \n **POST: central-settlements/settlements** \n{settlementModel, settlementWindowIds[]}
+  pl->moja: Advance settlement participant account\n state to PS_TRANSFERS_RECORDED \n **PUT: central-settlements/settlements/{id}**
+  note right moja
+  **Net credit** participant 
+  position ledgers are adjusted
+  end note
+  end loop
+
+  pl-->el: Return response, success/warnings HTTP:200
+  note right
+  [
+    {
+      "settlementModel":"defered-net" #(string)
+      "settlement": {... map settlement object from settlements api }, #optional
+      "errorInformation": { # optional
+          "errorCode": 0,
+          "errorDescription": "string",
+          "extensionList": {
+            "extension": [
+              {
+                "key": "string",
+                "value": "string" 
+              } 
+            ] 
+          } 
+        }
+      }
+  ]
+  end note
 end
 
 el-->ui: Update UI with settlement status

@@ -68,33 +68,26 @@ pl -> pl: Fatal: Validate Settlement Id non-matching
 pl -> pl: Fatal: Validate Participant Settlement data \ntransfer sum is zero
 pl -> pl: Fatal: Validate Participant Settlement data \nmatches net settlement amount
 end
-group Calculate Adjustments and Warnings
-pl -> pl: Non fatal: Validate Participant Settlement \nbalance is expected \n Return warnings if there are discrepencies
-pl -> pl: Non fatal: Validate Participant Settlement \nbalance is zero or positive
-end
-alt Success 
+alt Success/Warnings 
+  group Calculate Adjustments and Warnings
+  pl -> pl: Non fatal: Validate Participant Settlement \nbalance is expected \n Return warnings if there are discrepencies
+  pl -> pl: Non fatal: Validate Participant Settlement \nbalance is zero or positive
+  end
+
   pl--> el: Return finalisation validation results
   note right
     {
       "finalisationId": "GUIDv4", # Guid version 4 (string)
       "valid":true # (boolean) true if none failure error
+       "warnings": [{"type": "string", "message": "description", "errorInformation": {...}}]
     }
-  end note
-else Warnings
-  pl--> el: finalisation validation results with warnings
-  note right
-  {
-    "finalisationId": "GUIDv4", # Guid version 4 (string)
-    "valid":false, # (boolean) true if none failure error
-    "warnings": [{"type": "string", "message": "description", "errorInformation": {...}}]
-  }
   end note
 else Error 
   pl--> el: Return Error, HTTP: code
   note right
   {
     "finalisationId": "GUIDv4", # Guid version 4 (string)
-    "valid":false, # (boolean) true if none failure error
+    "valid":false, # (boolean) false if failures
     "errors": [{"type": "string", "message": "description", "errorInformation": {...}}]
   }
   end note
@@ -120,81 +113,99 @@ note left
   "user":"userName" # (string)
 }
 end note
+pl -> pl: validate finalisationId and settlementId against stored state
+alt Validation Success
 
-loop for each settlement debit participant
-' pl->moja: [Remove if Liquidity adjustment includes settlement account check]\nadjust ndc: PUT /participants/{name}/limits
-alt if balanceSettlementOption is true 
-pl->moja: Adjust settlment account according to settlement (funds Out)\n POST central-ledger/participants/{name}/accounts/{id}\nConfirm PUT /participants/{name}/accounts/{id}/transfers/{transferId}
-end
+  loop for each settlement debit participant
+  ' pl->moja: [Remove if Liquidity adjustment includes settlement account check]\nadjust ndc: PUT /participants/{name}/limits
+  alt if balanceSettlementOption is true 
+  pl->moja: Adjust settlment account according to settlement (funds Out)\n POST central-ledger/participants/{name}/accounts/{id}\nConfirm PUT /participants/{name}/accounts/{id}/transfers/{transferId}
+  end
 
-pl->moja: Advance state to Settled\nPUT central-settlements/settlements/{sid}/participants/{pid}/accounts/{aid} \n PUT /settlements/{sid}/participants/{pid}
-note right moja
-**Net debit** participant 
-   position ledgers are adjusted
-end note
+  pl->moja: Advance state to Settled\nPUT central-settlements/settlements/{sid}/participants/{pid}/accounts/{aid} \n PUT /settlements/{sid}/participants/{pid}
+  note right moja
+  **Net debit** participant 
+    position ledgers are adjusted
+  end note
 
-end loop
-loop for each settlement credit participant
-' pl->moja: [Remove if Liquidity adjustment includes settlement account check]\n adjust ndc: PUT /participants/{name}/limits
-alt if balanceSettlementOption is true 
-pl->moja: Adjust settlment account according to settlement (funds In)\n POST /participants/{name}/accounts/{id}
-end
-note left pl
-  reason: "Settlement Finanisation"
-  extension list: 
-    [ { 'key'='user', 'value'='username'},
-      { 'key'='reference', 'value'='finalisatonReference'} ]
-end note
-pl->moja: Advance state to Settled\nPUT central-settlements/settlements/{sid}/participants/{pid}/accounts/{aid} \n PUT /settlements/{sid}/participants/{pid}
-end loop
-alt if balanceSettlementOption is true 
-loop For each participant rebalance Settlement account  
-pl->moja: Get latest balance \n **GET central-ledger/participants/{name}/accounts**
-pl->moja: if < actual balance then\n increase balance (funds In)\n POST central-ledger/participants/{name}/accounts/{id}
-pl->moja: if > actual balance then\n decrease balance (funds Out)\n POST central-ledger/participants/{name}/accounts/{id}\nConfirm PUT /participants/{name}/accounts/{id}/transfers/{transferId}
-note left pl
-  reason: "Settlement Rebalance"
-  extension list: 
-    [ { 'key'='user', 'value'='username'},
-      { 'key'='reference', 'value'='finalisatonReference'} ]
-end note
-pl->moja: Confirm correct balance\n **GET central-ledger/participants/{name}/accounts**
-end 
-end
+  end loop
+  loop for each settlement credit participant
+  ' pl->moja: [Remove if Liquidity adjustment includes settlement account check]\n adjust ndc: PUT /participants/{name}/limits
+  alt if balanceSettlementOption is true 
+  pl->moja: Adjust settlment account according to settlement (funds In)\n POST /participants/{name}/accounts/{id}
+  end
+  note left pl
+    reason: "Settlement Finanisation"
+    extension list: 
+      [ { 'key'='user', 'value'='username'},
+        { 'key'='reference', 'value'='finalisatonReference'} ]
+  end note
+  pl->moja: Advance state to Settled\nPUT central-settlements/settlements/{sid}/participants/{pid}/accounts/{aid} \n PUT /settlements/{sid}/participants/{pid}
+  end loop
+  alt if balanceSettlementOption is true 
+  loop For each participant rebalance Settlement account  
+  pl->moja: Get latest balance \n **GET central-ledger/participants/{name}/accounts**
+  pl->moja: if < actual balance then\n increase balance (funds In)\n POST central-ledger/participants/{name}/accounts/{id}
+  pl->moja: if > actual balance then\n decrease balance (funds Out)\n POST central-ledger/participants/{name}/accounts/{id}\nConfirm PUT /participants/{name}/accounts/{id}/transfers/{transferId}
+  note left pl
+    reason: "Settlement Rebalance"
+    extension list: 
+      [ { 'key'='user', 'value'='username'},
+        { 'key'='reference', 'value'='finalisatonReference'} ]
+  end note
+  pl->moja: Confirm correct balance\n **GET central-ledger/participants/{name}/accounts**
+  end 
+  end
 
-alt Success
-  pl-->el: Response success, HTTP: 200
-  note right 
+  alt Processing Success
+    pl-->el: Response success, HTTP: 200
+    note right 
+      {
+        "state": "string",
+        "participants" : [
+        { 
+          "name": "payerfsp",# mojaloop participant name (string) 
+          "id": 1, # mojaloop database id (integer)
+          "settlementAccountId": 1 # settlement account id for participant (integer)
+        }]
+      }
+    end note
+  else Processing Error 
+    pl-->el: Return Error, HTTP: code
+    note right 
     {
       "state": "string",
       "participants" : [
       { 
         "name": "payerfsp",# mojaloop participant name (string) 
         "id": 1, # mojaloop database id (integer)
-        "settlementAccountId": 1 # settlement account id for participant (integer)
+        "settlementAccountId": 1, # settlement account id for participant (integer)
+        "errors": [{"type": "string", "message": "description", "errorInformation": {...}}] # errorInformation std fspiop error information object
       }]
     }
-  end note
-else Processing Error 
-  pl-->el: Return Error, HTTP: code
-  note right 
-  {
-    "state": "string",
-    "participants" : [
-    { 
-      "name": "payerfsp",# mojaloop participant name (string) 
-      "id": 1, # mojaloop database id (integer)
-      "settlementAccountId": 1, # settlement account id for participant (integer)
-      "errors": [{"type": "string", "message": "description", "errorInformation": {...}}] # errorInformation std fspiop error information object
-    }]
-  }
-  end note
-else Validation Error 
-  pl-->el: Return Error, HTTP: code
-  note right 
-    {"type": "string", "message": "description", "errorInformation": {...}} # errorInformation std fspiop error information object
-  end note
+    end note
+  end
+
+else Validation failure
+ pl-->el: Return Error, HTTP: code
+    note right 
+      {
+      "errorInformation": { 
+        "errorCode": 3100,
+        "errorDescription": "string",
+        "extensionList": {
+          "extension": [
+            {
+              "key": "string",
+              "value": "string" 
+            }
+          ] 
+        }
+      }
+    } # errorInformation std fspiop error information object
+    end note
 end
+
 el-->ui: Settlement \n Process \n Completed (Update settlement Status or display errors)
 
 @enduml
