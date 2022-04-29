@@ -1,0 +1,113 @@
+@startuml settlementInitiationErrorCases
+skinparam activityFontSize 4
+skinparam activityDiamondFontSize 30
+skinparam activityArrowFontSize 24
+skinparam defaultFontSize 24
+skinparam noteFontSize 24
+skinparam monochrome true
+autonumber
+
+title Settlement Process
+
+actor "Business Hub Operator User" as bu
+
+participant "Settlement Bank" as sbank
+participant "Micro-frontend" as ui
+participant "Experience Layer" as el
+participant "Process Layer" as pl
+participant "Report API" as report
+participant "Mojaloop" as moja
+
+
+== Initiate Settlement ==
+bu->ui: Initiate Settlement for these windows & Currency
+
+note left
+List of Settlement windows Ids
+[Optional] Currency or Settlement Model
+end note
+
+ui->el: POST: /settlements:initiate 
+note left
+{"settlementWindows": [
+    {
+      "id": 0
+    }], #settlement window id's (integer)
+ "settlementModel":"defered net", # (string)
+ "currency", :"XXX" # (currencyEnum)
+ }
+end note
+el->pl: POST: /settlements:initiate
+note left
+{"settlementWindows": [
+    {
+      "id": 0
+    }], #settlement window id's (integer)
+ "settlementModel":"defered net", # (string)
+ "currency", :"XXX" # (currencyEnum)
+ "user": "hub operators name" # (string) 
+ }
+end note
+group determine settlement Model/s 
+pl->moja: Load currencies for windows using GET central-settlements/settlementWindows/{id}
+pl->moja: Load settlementModels using GET central-ledger/settlementModels 
+pl->pl: Determine minimum list of settlementModels, return a map for each settlementModel containing a list of applicable settlementWindows
+end
+pl->pl: Validate
+alt Validation Error
+  pl-->el: Return Error HTTP: code \n <b>Ref: Initiate Settlement Error Codes</b>
+
+  note right
+    {
+      "errorInformation": { 
+        "errorCode": 0,
+        "errorDescription": "string",
+        "extensionList": {
+          "extension": [
+            {
+              "key": "string",
+              "value": "string" 
+            }
+          ] 
+        }
+      }
+    }
+
+  end note
+else Validation Success
+  loop for settlement models
+  pl->moja: Create settlement \n **POST: central-settlements/settlements** \n{settlementModel, settlementWindowIds[]}
+  pl->moja: Advance settlement participant account\n state to PS_TRANSFERS_RECORDED \n **PUT: central-settlements/settlements/{id}**
+  pl->moja: Advance settlement participant account\n state to PS_TRANSFERS_RESERVED \n **PUT: central-settlements/settlements/{id}** 
+
+  note right moja
+  **Net credit** participant 
+  position ledgers are adjusted
+  end note
+  end loop
+
+  pl-->el: Return response, success/warnings HTTP:200
+  note right
+  [
+    {
+      "settlementModel":"defered-net" #(string)
+      "settlement": {... map settlement object from settlements api }, #optional
+      "errorInformation": { # optional
+          "errorCode": 0,
+          "errorDescription": "string",
+          "extensionList": {
+            "extension": [
+              {
+                "key": "string",
+                "value": "string" 
+              } 
+            ] 
+          } 
+        }
+      }
+  ]
+  end note
+end
+
+el-->ui: Update UI with settlement status
+@enduml

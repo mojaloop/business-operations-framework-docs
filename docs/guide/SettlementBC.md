@@ -53,7 +53,6 @@ This process needs to occur after the settlement bank has applied the settlement
    - the settlement ledgers are checked against the real settlement account balances and adjustments processed to ensure that they are aligned.
 
 ## Detailed Sequence Diagram
-
 ![Settlement Detailed Process](../.vuepress/public/settlementProcessAPI.svg)
 
 There are a couple of processes in the sequence diagram that are worth elaborating on.
@@ -70,6 +69,7 @@ The continuation of the process is only possible once the operator has accepted 
 It is for this reason that the validation of the data is a necessary step, and must be referenced when accepting and proceeding with the process.
 
 ### Use cases for Finalize Settlement
+**Validation scenarios**
 
 | Validation Description                                                                            | Expected behaviour                                                                             |
 |---------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
@@ -123,3 +123,59 @@ Running a single currency multi-lateral deferred net settlement model, and using
 This can be achieved by creating separate settlement models I.e. one for each test currency, and one for the real currency.
 The default action on initiating the settlement with transaction in both currencies, would be that separate settlements are initiated. (The determine settlement model function would find both settlement models.)
 ___
+
+
+## Error Cases 
+### Initiate Settlement
+
+**Detailed Initiate Settlement Sequence Diagram**
+
+![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessInitiationErrors.svg)
+
+**Initiate Settlement Error Codes**
+
+| Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
+|------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
+| Settlement ID not found                                                | 3100        | 400              |  Request Validation Error                                 |
+| Currency not valid                                                     | 3100        | 400              |  Request Validation Error                                 |
+| SettlementModel not found                                              | 3100        | 400              |  Request Validation Error                                 |
+| Not able to create settlement                                          | 2000        | 500              |  Internal Server Error                                    |
+| Not able to update settlement state                                    | 2000        | 500              |  Internal Server Error                                    |
+| Technical error while communicating with Mojaloop services             | 1000        | 500              |  Technical Error                                          |
+
+
+### Finalize Settlement
+
+**Detailed Finalize Settlement Sequence Diagram**
+
+![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessFinaliseErrors.svg)
+
+**Finalize Settlement Validation Error Codes**
+
+| Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
+|------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
+| Settlement ID not found                                                | 3100        | 400              |  Request Validation Error                                 |
+| Participant IDs not found                                              | 3000        | 400              |  Request Validation Error                                 |
+| Participant Account IDs not found                                      | 3000        | 400              |  Request Validation Error                                 |
+| Technical error while communicating with Mojaloop services             | 1000        | 500              |  Technical Error                                          |
+| Selected settlement ID does not match report settlement ID             | 3100        | 500              |  Process Validation Error                                 |
+| Participant IDs in report not matching participant IDs in settlement   | 3000        | 500              |  Process Validation Error                                 |
+| Accounts in the report not matching with accounts in the settlement    | 3000        | 500              |  Process Validation Error                                 |
+| Sum of transfers in the report is non-zero                             | 3100        | 500              |  Process Validation Error                                 |
+| Transfer amount does not match net settlement amount                   | 3100        | 500              |  Process Validation Error                                 |
+| New balance amount not valid for currency                              | 3100        | 500              |  Process Validation Error                                 |
+| Transfer amount not valid for currency                                 | 3100        | 500              |  Process Validation Error                                 |
+| Settlement is in ABORTED or invalid state                              | 3100        | 500              |  Process Validation Error                                 |
+| Transfer amount not valid for currency                                 | 3100        | 500              |  Process Validation Error                                 |
+
+**Finalize Settlement Confirmation Error Codes**
+
+| Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
+|------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
+| Finalisation ID not found                                              | 3100        | 400              |  Request Validation Error                                 |
+| Settlement ID not found                                                | 3100        | 400              |  Request Validation Error                                 |
+| Technical error while communicating with Mojaloop services             | 1000        | 500              |  Technical Error                                          |
+| Error while funds in/out                                               | 2001        | 500              |  Internal Server Error                                    |
+| Not able to update settlement state                                    | 2001        | 500              |  Internal Server Error                                    |
+| Balances not matching after settlement                                 | 2001        | 500              |  Internal Server Error                                    |
+| Balances not matching after re-balancing                               | 2001        | 500              |  Internal Server Error                                    |
