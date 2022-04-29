@@ -55,12 +55,12 @@ pl->pl: Determine minimum list of settlementModels, return a map for each settle
 end
 pl->pl: Validate
 alt Validation Error
-  pl-->el: Return Error HTTP: 400
+  pl-->el: Return Error HTTP: code \n <b>Ref: Initiate Settlement Error Codes</b>
 
   note right
     {
       "errorInformation": { 
-        "errorCode": 3100,
+        "errorCode": 0,
         "errorDescription": "string",
         "extensionList": {
           "extension": [
@@ -78,6 +78,8 @@ else Validation Success
   loop for settlement models
   pl->moja: Create settlement \n **POST: central-settlements/settlements** \n{settlementModel, settlementWindowIds[]}
   pl->moja: Advance settlement participant account\n state to PS_TRANSFERS_RECORDED \n **PUT: central-settlements/settlements/{id}**
+  pl->moja: Advance settlement participant account\n state to PS_TRANSFERS_RESERVED \n **PUT: central-settlements/settlements/{id}** 
+
   note right moja
   **Net credit** participant 
   position ledgers are adjusted

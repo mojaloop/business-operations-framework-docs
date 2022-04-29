@@ -53,7 +53,6 @@ This process needs to occur after the settlement bank has applied the settlement
    - the settlement ledgers are checked against the real settlement account balances and adjustments processed to ensure that they are aligned.
 
 ## Detailed Sequence Diagram
-
 ![Settlement Detailed Process](../.vuepress/public/settlementProcessAPI.svg)
 
 There are a couple of processes in the sequence diagram that are worth elaborating on.
@@ -70,6 +69,7 @@ The continuation of the process is only possible once the operator has accepted 
 It is for this reason that the validation of the data is a necessary step, and must be referenced when accepting and proceeding with the process.
 
 ### Use cases for Finalize Settlement
+**Validation scenarios**
 
 | Validation Description                                                                            | Expected behaviour                                                                             |
 |---------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
@@ -128,8 +128,11 @@ ___
 ## Error Cases 
 ### Initiate Settlement
 
+**Detailed Initiate Settlement Sequence Diagram**
+
 ![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessInitiationErrors.svg)
-**Error Codes:**
+
+**Initiate Settlement Error Codes**
 
 | Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
 |------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
@@ -143,10 +146,11 @@ ___
 
 ### Finalize Settlement
 
-![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessFinaliseErrors.svg)
-**Error Codes:**
+**Detailed Finalize Settlement Sequence Diagram**
 
-1. **Validate Phase**
+![Initiate Settlement Process with Errors](../.vuepress/public/settlementProcessFinaliseErrors.svg)
+
+**Finalize Settlement Validation Error Codes**
 
 | Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
 |------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
@@ -164,7 +168,7 @@ ___
 | Settlement is in ABORTED or invalid state                              | 3100        | 500              |  Process Validation Error                                 |
 | Transfer amount not valid for currency                                 | 3100        | 500              |  Process Validation Error                                 |
 
-2. **Confirm Phase**
+**Finalize Settlement Confirmation Error Codes**
 
 | Error Description                                                      | Error Code  |  HTTP Code       | Category                                                  |
 |------------------------------------------------------------------------|-------------|------------------|-----------------------------------------------------------|
