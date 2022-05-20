@@ -5,7 +5,8 @@
 The objective of this design is to provide a solution that links the business process functions with core-settlement operations on the switch.
 
 This design is an example implementation of a Mojaloop settlement for a specific use case and is not meant to be comprehensive or cover all scenarios. This guide outlines the high-level design and explains the thinking that went into the design for a specific use-case chosen.```
-Although a version of this design is built and operational, not all part of this design document has been built. This is an example of a settlement implementation design. The benefit of this design & design document is therefore:
+Although a version of this design is built and operational, not everything in this design document has been built. 
+This is an example of a settlement implementation design. The benefit of this design & design document is therefore:
 - to use for demonstration; 
 - to use as an initial version to help 'Getting Started Quickly';
 - to use as a starting design on which improvements can be made before adopting;
