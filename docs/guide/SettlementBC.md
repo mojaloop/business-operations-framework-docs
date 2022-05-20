@@ -68,7 +68,7 @@ These drawbacks are:
 1. Out of sequence re-balancing results in incorrect results. This vulnerability therefore requires a business process and supportive management to enforce.
 1. Reconciliation of the Mojaloop Settlement Account and the settlement bank account is difficult and complicated. This is because the re-balancing may not directly reflect the activity in the settlement bank account. The transfer amounts are linked to the timing of when the re-balancing action is applied, and when the reports and statements are generated.
 
-**Better solution**
+**Recommended solutions**
 There are numerous other approaches to implementing settlement that do follow best practice. Please consult one of the experts in the Mojaloop community if you would like to explore this. If your requirement has similar limitations and creating a new mechanism is not an option, then there is a relatively minor adjustment that can be made to improve this solution and should be considered.
 Replacing re-balancing mechanism with an import of a statement from the settlement bank account's transactions would remove the timing and reconciling problems mentioned above.
 
