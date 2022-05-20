@@ -63,7 +63,7 @@ This process needs to occur after the settlement bank has applied the settlement
 
 ### Re-balancing function - is not best practice
 It is worth noting that the re-balancing function that is defined in the above settlement finalization process is not the preferred or best-practice approach. 
-This approach was chosen because of regularity requirements and limitations of mechanisms available to implement settlement between participants. I.e. it was designed to work on existing in-place financial solutions. Re-balancing has quite a few drawbacks, and is not considered best practice and should be avoided if possible. 
+This approach was chosen because of regulatory requirements and limitations of mechanisms available to implement settlement between participants, i.e. it was designed to work on existing in-place financial solutions. Re-balancing has quite a few drawbacks, and is not considered best practice and should be avoided if possible. 
 These drawbacks are:
 1. Out of sequence re-balancing results in incorrect results. This vulnerability therefore requires a business process and supportive management to enforce.
 1. Reconciliation of the Mojaloop Settlement Account and the settlement bank account is difficult and complicated. This is because the re-balancing may not directly reflect the activity in the settlement bank account. The transfer amounts are linked to the timing of when the re-balancing action is applied, and when the reports and statements are generated.
