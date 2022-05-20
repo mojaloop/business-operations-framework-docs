@@ -2,7 +2,12 @@
 
 ## Introduction
 
-The objectives of this implementation is to provide a solution to Settlements that supports the core-settlement operations and the high-level settlement business process functions. This guide outlines the high-level design and explains the thinking that went into the design.
+The objectives of this implementation is to provide a solution to Settlements that supports the core-settlement operations and the high-level settlement business process functions. This design is an example implementation of a Mojaloop settlement for a specific use case and is by not means the only approach that can be taken. This guide outlines the high-level design and explains the thinking that went into the design.
+Although a version of this design is built and operational, not all part of this design document has been built. This is an example of a settlement implementation design. The benefit of this design & design document is therefore:
+- to use for demonstration; 
+- to use as an initial version to help 'Getting Started Quickly';
+- to use as a starting design on which improvements can be made before adopting;
+- to use as a starting point to elaborate on concepts that are discussed in this design that may need to be addressed in another design.
 
 ## Core-Settlement Operations
 
@@ -16,6 +21,7 @@ The Core-Settlement operations support the following capabilities:
 - Queries for Settlement Matrix Reports, Settlement-Windows, etc
 
 The OpenAPI definition is available at the [Mojaloop-Specification repository](https://github.com/mojaloop/mojaloop-specification/tree/master/settlement-api).
+
 
 ## High-level Architecture
 
@@ -45,12 +51,23 @@ To initiate the settlement process, the hub operator selects :
 The position ledgers of the net credit participants are adjusted during Settlement Initiation.
 **Note:** It is important to create the batch settlement object in the way that the settlement is to be completed and finalized.
 1. A **Settlement initiation report**  is generated and used to communicated to the settlement bank the requirements of the settlement.
-1. **Settlement Finalization & settlement account rebalancing**
+1. **Settlement Finalization & settlement account re-balancing**
 This process needs to occur after the settlement bank has applied the settlement changes. In this step the:
    - settlement process is completed and a settlement finalization report has been received from the settlement bank.
    - the net debit participants in the settlement have their position ledgers adjusted.
    - the settlement ledgers are adjusted for all participants to match the transferred amount for the settlement.
    - the settlement ledgers are checked against the real settlement account balances and adjustments processed to ensure that they are aligned.
+
+### Re-balancing function - is not best practice
+It is worth noting that the re-balancing function that is defined in the above settlement finalization process is not the preferred or best-practice approach. 
+This approach was chosen because of regularity requirements and limitations of mechanisms available to implement settlement between participants. I.e. it was designed to work on existing in-place financial solutions. Re-balancing has quite a few drawbacks, and is not considered best practice and should be avoided if possible. 
+These drawbacks are:
+1. Out of sequence re-balancing results in incorrect results. This vulnerability therefore requires a business process and supportive management to enforce.
+1. Reconciliation of the Mojaloop Settlement Account and the settlement bank account is difficult and complicated. This is because the re-balancing may not directly reflect the activity in the settlement bank account. The transfer amounts are linked to the timing of when the re-balancing action is applied, and when the reports and statements are generated.
+
+**Better solution**
+There are numerous other approaches to implementing settlement that do follow best practice. Please consult one of the experts in the Mojaloop community if you would like to explore this. If your requirement has similar limitations and creating a new mechanism is not an option, then there is a relatively minor adjustment that can be made to improve this solution and should be considered.
+If the re-balancing mechanism is replaced with an import of a statement from the settlement bank account's transactions. This change would remove the timing and reconciling problems mentioned above.
 
 ## Detailed Sequence Diagram
 ![Settlement Detailed Process](../.vuepress/public/settlementProcessAPI.svg)
