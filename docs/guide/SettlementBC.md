@@ -70,7 +70,7 @@ These drawbacks are:
 
 **Better solution**
 There are numerous other approaches to implementing settlement that do follow best practice. Please consult one of the experts in the Mojaloop community if you would like to explore this. If your requirement has similar limitations and creating a new mechanism is not an option, then there is a relatively minor adjustment that can be made to improve this solution and should be considered.
-If the re-balancing mechanism is replaced with an import of a statement from the settlement bank account's transactions. This change would remove the timing and reconciling problems mentioned above.
+Replacing re-balancing mechanism with an import of a statement from the settlement bank account's transactions would remove the timing and reconciling problems mentioned above.
 
 ## Detailed Sequence Diagram
 ![Settlement Detailed Process](../.vuepress/public/settlementProcessAPI.svg)
