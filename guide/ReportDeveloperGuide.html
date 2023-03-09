@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Report Developer Guide | Mojaloop Hub Operations Framework Documentation</title>
+    <meta name="description" content="">
+    
+    <meta name="description" content="Business Operations Framework Documentation">
+    <meta name="theme-color" content="#00a3ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="preload" href="/business-operations-framework-docs/assets/css/0.styles.73bef9ff.css" as="style"><link rel="preload" href="/business-operations-framework-docs/assets/js/app.e79f47cd.js" as="script"><link rel="preload" href="/business-operations-framework-docs/assets/js/2.65c7ddde.js" as="script"><link rel="preload" href="/business-operations-framework-docs/assets/js/12.82166dd3.js" as="script"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/10.b28ec649.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/11.6dcdbbcd.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/13.2649a30f.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/14.2190182f.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/15.b1da6c39.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/16.0cdaddde.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/3.94d7a4f5.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/4.08734184.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/5.f18847b0.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/6.19dda1c1.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/7.53fee368.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/8.0180bbd6.js"><link rel="prefetch" href="/business-operations-framework-docs/assets/js/9.b5e52db5.js">
+    <link rel="stylesheet" href="/business-operations-framework-docs/assets/css/0.styles.73bef9ff.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="main-docs-wrapper"><div class="main-content-wrapper"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/business-operations-framework-docs/" class="home-link router-link-active"><img src="/business-operations-framework-docs/mojaloop_logo_med.png" alt="Mojaloop Hub Operations Framework Documentation" class="logo"> <span class="site-name can-hide">Mojaloop Hub Operations Framework Documentation</span></a> <!----> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Technical Guide" class="dropdown-title"><span class="title">Technical Guide</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/" class="nav-link router-link-active">
+  Technical Introduction
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/SecurityBC.html" class="nav-link">
+  RBAC Operational API implementation
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/Microfrontend-JAMStack.html" class="nav-link">
+  Micro-frontend - JAMStack design
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/ReportingBC.html" class="nav-link">
+  Reporting BC Implementation
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/ReportDeveloperGuide.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Reporting Developer Guide
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/SettlementBC.html" class="nav-link">
+  Settlement Ops Implementation
+  <!----></a></li></ul></div></div><div class="nav-item"><a href="https://mojaloop.io/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Mojaloop
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://docs.mojaloop.io/mojaloop-business-docs/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Business Documents
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div> <!----></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Technical Guide" class="dropdown-title"><span class="title">Technical Guide</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/" class="nav-link router-link-active">
+  Technical Introduction
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/SecurityBC.html" class="nav-link">
+  RBAC Operational API implementation
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/Microfrontend-JAMStack.html" class="nav-link">
+  Micro-frontend - JAMStack design
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/ReportingBC.html" class="nav-link">
+  Reporting BC Implementation
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/ReportDeveloperGuide.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Reporting Developer Guide
+  <!----></a></li><li class="dropdown-item"><!----> <a href="/business-operations-framework-docs/guide/SettlementBC.html" class="nav-link">
+  Settlement Ops Implementation
+  <!----></a></li></ul></div></div><div class="nav-item"><a href="https://mojaloop.io/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Mojaloop
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://docs.mojaloop.io/mojaloop-business-docs/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Business Documents
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Technical Guide</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/business-operations-framework-docs/guide/" aria-current="page" class="sidebar-link">Introduction</a></li><li><a href="/business-operations-framework-docs/guide/SecurityBC.html" class="sidebar-link">RBAC Operational API implementation</a></li><li><a href="/business-operations-framework-docs/guide/Microfrontend-JAMStack.html" class="sidebar-link">Micro-frontend - JAMStack design</a></li><li><a href="/business-operations-framework-docs/guide/ReportingBC.html" class="sidebar-link">Reporting bounded context implementation</a></li><li><a href="/business-operations-framework-docs/guide/ReportDeveloperGuide.html" aria-current="page" class="active sidebar-link">Report Developer Guide</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/business-operations-framework-docs/guide/ReportDeveloperGuide.html#architecture" class="active sidebar-link">Architecture</a></li><li class="sidebar-sub-header"><a href="/business-operations-framework-docs/guide/ReportDeveloperGuide.html#rbac" class="sidebar-link">RBAC</a></li><li class="sidebar-sub-header"><a href="/business-operations-framework-docs/guide/ReportDeveloperGuide.html#kubernetes-custom-resource" class="sidebar-link">Kubernetes Custom Resource</a></li><li class="sidebar-sub-header"><a href="/business-operations-framework-docs/guide/ReportDeveloperGuide.html#building-your-development-environment" class="sidebar-link">Building your development environment</a></li><li class="sidebar-sub-header"><a href="/business-operations-framework-docs/guide/ReportDeveloperGuide.html#deploying-to-a-production-environment" class="sidebar-link">Deploying to a production environment</a></li></ul></li><li><a href="/business-operations-framework-docs/guide/SettlementBC.html" class="sidebar-link">Settlement Ops Implementation</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="content content__default"><h1 id="report-developer-guide"><a href="#report-developer-guide" class="header-anchor">#</a> Report Developer Guide</h1> <p>This is a developer guide to building and deploying reports for the reporting REST service that is part of the deployment at the Hub.</p> <h2 id="architecture"><a href="#architecture" class="header-anchor">#</a> Architecture</h2> <p><img src="/business-operations-framework-docs/assets/img/RestReportingArchitecture.drawio.5cab96b0.png" alt="Architecture diagram of reporting service operator"><br> <a href="https://github.com/mojaloop/reporting" target="_blank" rel="noopener noreferrer">Here<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> is the repository of the reporting service operator.<br>
+The reporting service operator has been designed to be accessed by either a hub operator, or a DFSP operator.<br>
+Access to the report is controlled through the RBAC integration that is part of the business operations framework. Ory Oathkeeper protects the reporting API end point, and Keto is checked by the reporting service operator for finer grained report specific authorisation.<br>
+The report data is queried from the SQL Reporting database which is at the moment a one way sync of the central ledger database.<br>
+Each report is installed on the system as a kubernetes custom resource which is a .yaml file of a particular format that is applied to the kubernetes cluster. <a href="https://github.com/mojaloop/reporting-k8s-templates" target="_blank" rel="noopener noreferrer">Here<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> is the repository of the open sourced report templates. The custom resource definition for a report is defined <a href="https://github.com/mojaloop/reporting-k8s-templates/blob/master/crds/reporting-crd.yaml" target="_blank" rel="noopener noreferrer">here<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> which describes the format of the custom resource.</p> <h2 id="rbac"><a href="#rbac" class="header-anchor">#</a> RBAC</h2> <p>Access to the reports are controlled through the RBAC when the service is deployed through the standard IaC configuration.<br>
+This means that in order to access a report, a user will need to have the correct authorisation assigned. This is acheived through the assignement of roles to the user, and the assignment of participant access.</p> <p>The first authorisation check is made by Ory Oathkeeper which has a rule that links the</p> <div class="language- extra-class"><pre class="language-text"><code>reportingApi
+</code></pre></div><p>perission to assess to the reporting service API endpoint.</p> <p>The next authorisation check is made by the reporting service operator. Permission to access the particulat report is checked. The permission that is checked is defined in the custom resource. This permission is optional and will otherwise use the name (metadata) of the report as defined in the customer resource.</p> <h3 id="requiring-dfsp-permission"><a href="#requiring-dfsp-permission" class="header-anchor">#</a> Requiring DFSP permission</h3> <p>If the report is intended for a particular participant of DFSP, then it is imporant to use the ‘dfspId’ parameter. This paramter then first check for participant authoriasation before executing and producing the report.<br>
+I.e.</p> <div class="language-yaml extra-class"><pre class="language-yaml"><code> <span class="token key atrule">params</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> dfspId
+        <span class="token key atrule">required</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+</code></pre></div><h3 id="running-the-report"><a href="#running-the-report" class="header-anchor">#</a> Running the report</h3> <p>First you will need to login. The easiest way of doing this is to login to the Financial Portal. This create the authorisation and authentication cookie tokens which the report then uses.<br>
+Here is an example of accessing the report directly after loggin.</p> <div class="language- extra-class"><pre class="language-text"><code>https://bofportal.YourEnvironment.YourDomain.com/proxy/reports/MyReportPath?ReportParamter=25
+</code></pre></div><h3 id="report-output-formats"><a href="#report-output-formats" class="header-anchor">#</a> report output formats</h3> <p>The report supports multiple output formats. To switch between these use the format paramter in the Rest query.</p> <ol><li>Excel file</li></ol> <div class="language- extra-class"><pre class="language-text"><code>&amp;format=xlsx
+</code></pre></div><ol start="2"><li>Comma seperated values</li></ol> <div class="language- extra-class"><pre class="language-text"><code>&amp;format=csv
+</code></pre></div><ol start="3"><li>JSON class format</li></ol> <div class="language- extra-class"><pre class="language-text"><code>&amp;format=json
+</code></pre></div><ol start="4"><li>HTML browser format (this is the default format output)</li></ol> <div class="language- extra-class"><pre class="language-text"><code>&amp;format=html
+</code></pre></div><h2 id="kubernetes-custom-resource"><a href="#kubernetes-custom-resource" class="header-anchor">#</a> Kubernetes Custom Resource</h2> <p>All aspects of a report are controlled through the mojaloopreport custome resource file. The definition of that file looks as follows.</p> <h3 id="custom-resource-definition"><a href="#custom-resource-definition" class="header-anchor">#</a> Custom Resource Definition</h3> <div class="language-yml extra-class"><pre class="language-yml"><code><span class="token key atrule">kind</span><span class="token punctuation">:</span> CustomResourceDefinition
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> apiextensions.k8s.io/v1
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> mojaloopreports.mojaloop.io
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">group</span><span class="token punctuation">:</span> mojaloop.io
+  <span class="token key atrule">scope</span><span class="token punctuation">:</span> Namespaced
+  <span class="token key atrule">names</span><span class="token punctuation">:</span>
+    <span class="token key atrule">plural</span><span class="token punctuation">:</span> mojaloopreports
+    <span class="token key atrule">singular</span><span class="token punctuation">:</span> mojaloopreport
+    <span class="token key atrule">shortNames</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> mlreport
+    <span class="token key atrule">kind</span><span class="token punctuation">:</span> MojaloopReport
+    <span class="token key atrule">listKind</span><span class="token punctuation">:</span> MojaloopReportList
+  <span class="token key atrule">versions</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> v1
+      <span class="token key atrule">served</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">storage</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">schema</span><span class="token punctuation">:</span>
+        <span class="token key atrule">openAPIV3Schema</span><span class="token punctuation">:</span>
+          <span class="token key atrule">description</span><span class="token punctuation">:</span> MojaloopReport is the Schema for MojaloopReport API
+          <span class="token key atrule">type</span><span class="token punctuation">:</span> object
+          <span class="token key atrule">properties</span><span class="token punctuation">:</span>
+            <span class="token key atrule">apiVersion</span><span class="token punctuation">:</span>
+              <span class="token key atrule">description</span><span class="token punctuation">:</span> <span class="token punctuation">&gt;</span><span class="token punctuation">-</span>
+                APIVersion defines the versioned schema of this representation
+                of an object. Servers should convert recognized schemas to the
+                latest internal value<span class="token punctuation">,</span> and may reject unrecognized values. More
+                <span class="token key atrule">info</span><span class="token punctuation">:</span>
+                https<span class="token punctuation">:</span>//git.k8s.io/community/contributors/devel/sig<span class="token punctuation">-</span>architecture/api<span class="token punctuation">-</span>conventions.md<span class="token comment">#resources</span>
+              <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+            <span class="token key atrule">kind</span><span class="token punctuation">:</span>
+              <span class="token key atrule">description</span><span class="token punctuation">:</span> <span class="token punctuation">&gt;</span><span class="token punctuation">-</span>
+                Kind is a string value representing the REST resource this
+                object represents. Servers may infer this from the endpoint the
+                client submits requests to. Cannot be updated. In CamelCase.
+                <span class="token key atrule">More info</span><span class="token punctuation">:</span>
+                https<span class="token punctuation">:</span>//git.k8s.io/community/contributors/devel/sig<span class="token punctuation">-</span>architecture/api<span class="token punctuation">-</span>conventions.md<span class="token comment">#types-kinds</span>
+              <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+            <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+              <span class="token key atrule">type</span><span class="token punctuation">:</span> object
+            <span class="token key atrule">spec</span><span class="token punctuation">:</span>
+              <span class="token key atrule">description</span><span class="token punctuation">:</span> MojaloopReport.spec describes the desired state of my resource
+              <span class="token key atrule">type</span><span class="token punctuation">:</span> object
+              <span class="token key atrule">required</span><span class="token punctuation">:</span>
+                <span class="token punctuation">-</span> endpoint
+                <span class="token punctuation">-</span> queries
+                <span class="token punctuation">-</span> template
+              <span class="token key atrule">properties</span><span class="token punctuation">:</span>
+                <span class="token key atrule">permission</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">description</span><span class="token punctuation">:</span> Permission to be needed to access this report. This is optional. If unspecified<span class="token punctuation">,</span> the name of the resource will be considered as permission.
+                  <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+                <span class="token key atrule">endpoint</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">description</span><span class="token punctuation">:</span> Reporting endpoint
+                  <span class="token key atrule">type</span><span class="token punctuation">:</span> object
+                  <span class="token key atrule">required</span><span class="token punctuation">:</span>
+                    <span class="token punctuation">-</span> path
+                  <span class="token key atrule">properties</span><span class="token punctuation">:</span>
+                    <span class="token key atrule">path</span><span class="token punctuation">:</span>
+                      <span class="token key atrule">description</span><span class="token punctuation">:</span> Report URL path
+                      <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+                    <span class="token key atrule">params</span><span class="token punctuation">:</span>
+                      <span class="token key atrule">description</span><span class="token punctuation">:</span> Report query params
+                      <span class="token key atrule">type</span><span class="token punctuation">:</span> array
+                      <span class="token key atrule">items</span><span class="token punctuation">:</span>
+                        <span class="token key atrule">description</span><span class="token punctuation">:</span> Query param
+                        <span class="token key atrule">type</span><span class="token punctuation">:</span> object
+                        <span class="token key atrule">required</span><span class="token punctuation">:</span>
+                          <span class="token punctuation">-</span> name
+                        <span class="token key atrule">properties</span><span class="token punctuation">:</span>
+                          <span class="token key atrule">name</span><span class="token punctuation">:</span>
+                            <span class="token key atrule">description</span><span class="token punctuation">:</span> Query param name
+                            <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+                          <span class="token key atrule">required</span><span class="token punctuation">:</span>
+                            <span class="token key atrule">description</span><span class="token punctuation">:</span> Make query param required
+                            <span class="token key atrule">type</span><span class="token punctuation">:</span> boolean
+                          <span class="token key atrule">default</span><span class="token punctuation">:</span>
+                            <span class="token key atrule">description</span><span class="token punctuation">:</span> Default query param value
+                            <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+                <span class="token key atrule">queries</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">description</span><span class="token punctuation">:</span> The list of queries used in ejs reporting template
+                  <span class="token key atrule">type</span><span class="token punctuation">:</span> array
+                  <span class="token key atrule">items</span><span class="token punctuation">:</span>
+                    <span class="token key atrule">description</span><span class="token punctuation">:</span> permission ID.
+                    <span class="token key atrule">type</span><span class="token punctuation">:</span> object
+                    <span class="token key atrule">required</span><span class="token punctuation">:</span>
+                      <span class="token punctuation">-</span> name
+                      <span class="token punctuation">-</span> query
+                    <span class="token key atrule">properties</span><span class="token punctuation">:</span>
+                      <span class="token key atrule">name</span><span class="token punctuation">:</span>
+                        <span class="token key atrule">description</span><span class="token punctuation">:</span> Variable name that the query result will be assigned to
+                        <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+                      <span class="token key atrule">query</span><span class="token punctuation">:</span>
+                        <span class="token key atrule">description</span><span class="token punctuation">:</span> SQL query
+                        <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+                <span class="token key atrule">template</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">description</span><span class="token punctuation">:</span> ejs reporting template
+                  <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+
+            <span class="token key atrule">status</span><span class="token punctuation">:</span>
+              <span class="token key atrule">description</span><span class="token punctuation">:</span> The status of this MojaloopReport resource<span class="token punctuation">,</span> set by the operator.
+              <span class="token key atrule">type</span><span class="token punctuation">:</span> object
+              <span class="token key atrule">properties</span><span class="token punctuation">:</span>
+                <span class="token key atrule">state</span><span class="token punctuation">:</span>
+                  <span class="token key atrule">description</span><span class="token punctuation">:</span> The state of the report.
+                  <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+      <span class="token key atrule">additionalPrinterColumns</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> endpoint
+          <span class="token key atrule">type</span><span class="token punctuation">:</span> string
+          <span class="token key atrule">description</span><span class="token punctuation">:</span> Reporting endpoint
+          <span class="token key atrule">jsonPath</span><span class="token punctuation">:</span> .spec.endpoint.path
+  <span class="token key atrule">conversion</span><span class="token punctuation">:</span>
+    <span class="token key atrule">strategy</span><span class="token punctuation">:</span> None
+</code></pre></div><p>Example of reports that conform to this custom resource can be found <a href="https://github.com/mojaloop/reporting-k8s-templates/tree/master/templates" target="_blank" rel="noopener noreferrer">here<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>.<br>
+Please note that these Yaml files also contain <strong>helm directives</strong> in these files denoted by the double curly brackets.</p> <div class="language- extra-class"><pre class="language-text"><code>{{ some helm directive / function }}
+</code></pre></div><p>If you intend to manually apply these files to kubernetes, these will need to be removed or replaced.</p> <h3 id="kubectl"><a href="#kubectl" class="header-anchor">#</a> Kubectl</h3> <p>You can use the following command to apply a report custom resource to a kubernetes instance.</p> <div class="language- extra-class"><pre class="language-text"><code>kubectl apply -f resources/examples/participant_list.yaml
+</code></pre></div><p>Let’s cover some of the details in the custome resource.</p> <h3 id="control-how-the-report-is-called"><a href="#control-how-the-report-is-called" class="header-anchor">#</a> Control how the report is called</h3> <p>The first part of the spec: of the report defines how the report is called.<br>
+I.e.</p> <div class="language-yaml extra-class"><pre class="language-yaml"><code><span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">permission</span><span class="token punctuation">:</span> report<span class="token punctuation">-</span>dfsp<span class="token punctuation">-</span>settlement<span class="token punctuation">-</span>detail
+  <span class="token key atrule">endpoint</span><span class="token punctuation">:</span>
+    <span class="token key atrule">path</span><span class="token punctuation">:</span> /dfspSettlementDetail
+    <span class="token key atrule">params</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> settlementId
+        <span class="token key atrule">required</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> fspid
+        <span class="token key atrule">required</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+</code></pre></div><ul><li><strong>permission</strong> this is where the RBAC permission tag for this report is defined</li> <li><strong>path</strong> this is the endpoint path for this report</li> <li><strong>params</strong> here the paramters for the report are defined and specified if they are required paramters or not.</li></ul> <h3 id="control-where-the-report-gets-it-data-from"><a href="#control-where-the-report-gets-it-data-from" class="header-anchor">#</a> Control where the report gets it data from</h3> <div class="language-yaml extra-class"><pre class="language-yaml"><code><span class="token key atrule">queries</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> dfspInfo
+      <span class="token key atrule">query</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
+        SELECT participantId, name FROM participant WHERE name = :fspid AND name != 'Hub'</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> report
+      <span class="token key atrule">query</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
+        SELECT
+                pCPayer.participantId as payerFspid,</span>
+</code></pre></div><p>In the queries section, any number of queries can be defined that are run against the reporting database and loaded into named json classes.<br>
+Input parameters can be used in the queries by using a colon in front of the parameter name. e.g.</p> <div class="language- extra-class"><pre class="language-text"><code>:paramname
+</code></pre></div><h3 id="control-how-the-reports-look-like"><a href="#control-how-the-reports-look-like" class="header-anchor">#</a> Control how the reports look like</h3> <p>The template part of the custom resource file contains an EJS script that is use to produce the report.<br>
+These scripts look like html with styling, but contain code within script blocks</p> <div class="language-ejs extra-class"><pre class="language-ejs"><code><span class="token ejs language-ejs"><span class="token delimiter punctuation">&lt;%</span><span class="token language-javascript"> ejs script </span><span class="token delimiter punctuation">%&gt;</span></span>
+</code></pre></div><p>The EJS scripts are quite versitile and can be used to change a name text, or  define formatting functions, or loops that loop through data.</p> <h2 id="building-your-development-environment"><a href="#building-your-development-environment" class="header-anchor">#</a> Building your development environment</h2> <p><em>(Installation this service locally to aid development.)</em><br>
+Currently the only way to validate the report design, is to apply the report to the kubernetes that the reporting service is running in. The reporting service will initially validate the report, and then enable the endpoint. The report can be run and checked to see if it meets it’s requirements.</p> <p>This document provides instructions for deploying this service locally, so that a developer can try out their designs before installing the report in a an environment<br>
+Since the reporting service follows K8S operator pattern, we need to deploy a mini Kubernetes cluster on our machine and deploy the reporting service along with some dependent services.</p> <h3 id="pre-requisites"><a href="#pre-requisites" class="header-anchor">#</a> Pre-requisites</h3> <ul><li>Please make sure that you have the following softwares installed
+<ul><li>git</li> <li>docker</li> <li>minikube</li> <li>kubectl</li> <li>helm</li> <li>mysql-client</li></ul></li></ul> <h3 id="install-k8s"><a href="#install-k8s" class="header-anchor">#</a> Install K8S</h3> <ul><li>Start minikube K8S cluster with the following command<div class="language- extra-class"><pre class="language-text"><code>minikube start --driver=docker --kubernetes-version=v1.21.5
+</code></pre></div></li></ul> <h3 id="clone-the-repository"><a href="#clone-the-repository" class="header-anchor">#</a> Clone the repository</h3> <ul><li>Download the repository<div class="language- extra-class"><pre class="language-text"><code>git clone https://github.com/mojaloop/reporting.git
+cd reporting
+</code></pre></div></li></ul> <h3 id="deploy-helm-chart"><a href="#deploy-helm-chart" class="header-anchor">#</a> Deploy helm chart</h3> <ul><li>Install helm chart using the following commands<div class="language- extra-class"><pre class="language-text"><code>helm dep up ./resources/test-integration/
+helm install test1 ./resources/test-integration/ --set reporting-legacy-api.image.tag=v11.0.0
+</code></pre></div></li> <li>Wait for all the services to be up<br>
+You can monitor the pods health or use the following commands to wait for the services<div class="language- extra-class"><pre class="language-text"><code>kubectl -n default rollout status deployment test1-reporting-legacy-api
+kubectl -n default rollout status statefulset mysql
+</code></pre></div></li></ul> <h3 id="restore-mysql-database-backup"><a href="#restore-mysql-database-backup" class="header-anchor">#</a> Restore mysql database backup</h3> <ul><li>Port forward the mysql service<div class="language- extra-class"><pre class="language-text"><code>kubectl port-forward -n default service/mysql 3306:3306
+</code></pre></div></li> <li>Insert sample data into database. You can change the database name and filename in the following command as per your need.<div class="language- extra-class"><pre class="language-text"><code>mysql -h127.0.0.1 -P3306 -uuser -ppassword default &lt; ./resources/examples/participants_db_dump.sql
+</code></pre></div></li></ul> <h3 id="load-reporting-template"><a href="#load-reporting-template" class="header-anchor">#</a> Load reporting template</h3> <ul><li>Adding the custom resource using the following command<div class="language- extra-class"><pre class="language-text"><code>kubectl apply -f resources/examples/participant_list.yaml
+</code></pre></div></li></ul> <h3 id="get-the-report"><a href="#get-the-report" class="header-anchor">#</a> Get the report</h3> <ul><li>Port forward the reporting service<div class="language- extra-class"><pre class="language-text"><code>kubectl port-forward -n default service/test1-reporting-legacy-api 8080:80
+</code></pre></div></li> <li>Get the report by opening the following URL in browser<div class="language- extra-class"><pre class="language-text"><code>http://localhost/participant-list
+</code></pre></div></li></ul> <h3 id="cleanup"><a href="#cleanup" class="header-anchor">#</a> Cleanup</h3> <ul><li>Cleanup<div class="language- extra-class"><pre class="language-text"><code>kubectl delete -f resources/examples/participant_list.yaml
+helm uninstall test1
+minikube stop
+</code></pre></div></li></ul> <h2 id="deploying-to-a-production-environment"><a href="#deploying-to-a-production-environment" class="header-anchor">#</a> Deploying to a production environment</h2> <p>There are multiple ways that a report custom resource can be deployed into an environment. The method that has been chosen and built into the IaC offering involves the use of a helm chart. (This aligns well with other Mojaloop components.)</p> <p>The IaC enables both a public and a private deployment of reports. The process is identical except for the repository being private and residing within organisation’s source control.<br>
+At a high level the process looks as follows:</p> <ol><li>Branch and commit changes to the repository where the report is deployed from.</li> <li>Create a pull request and merge the changes into the master branch of the repository.</li> <li>Create a new release on the repository. (Depending on configuration this typically kicks off a CICD mechanism that builds and publishes the helm package.)</li> <li>Update the IaC to depoly the new helm release version for the reports.</li> <li>Run the appropriate pipeline to perform the deployment.</li></ol></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">3/16/2022, 1:13:01 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/business-operations-framework-docs/guide/ReportingBC.html" class="prev">
+        Reporting bounded context implementation
+      </a></span> <span class="next"><a href="/business-operations-framework-docs/guide/SettlementBC.html">
+        Settlement Ops Implementation
+      </a>
+      →
+    </span></p></div> </main> <!----></div></div> <!----></div><div class="global-ui"><!----></div></div>
+    
+    <script src="/business-operations-framework-docs/assets/js/app.e79f47cd.js" defer></script><script src="/business-operations-framework-docs/assets/js/2.65c7ddde.js" defer></script><script src="/business-operations-framework-docs/assets/js/12.82166dd3.js" defer></script>
+  </body>
+</html>
