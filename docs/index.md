@@ -6,7 +6,7 @@ actionText: Technical Guide →
 actionLink: /guide/
 features:
 - title: RBAC Operational API implementation
-  details: This section details how the RBAC security features for the operational API's are implmented in the current Mojaloop version.
+  details: This section details how the RBAC security features for the operational API's are implemented in the current Mojaloop version.
 - title: Micro-service and JAMStack UI Framework
   details: This section details the tech stack, and how the elements of the micro-service and JAMStack are implemented.
 - title: Reporting Bounded Context
