@@ -13,7 +13,7 @@ The security design:
 1. Roles are assigned Permissions
 1. The Identity and Access Proxy (Ory Oathkeeper) enforces access to endpoints based on permission.
 1. Backend API can optionally check permissions through Keto API.
-1. Mutually exclusive permission sets can be defined in the system to enforce seperation of duties. 
+1. Mutually exclusive permission sets can be defined in the system to enforce separation of duties. 
 
 ## Enforcing Maker-Checker
 There are two approaches that can be taken to enforce a maker-checker validation flow.
@@ -34,7 +34,7 @@ Ory Oathkeeper is configured to use a 'header' mutator. This 'header' mutator wi
 X-User: wso2-uuid
 ```
 
-It is worth pointing out that JWT 'id_token' are also easily supported my modifying the Ory Oathkeeper mutator configuration. The 'id_token' mutator takes the authentication information (e.g. subject) and transforms it to a signed JSON Web Token, and more specifically to an OpenID Connect ID Token. The API backends can verify the token by fetching the (public) key from the /.well-known/jwks.json endpoint provided by the ORY Oathkeeper API.
+It is worth pointing out that JWT 'id_token' are also easily supported my modifying the Ory Oathkeeper mutator configuration. The 'id_token' mutator takes the authentication information (e.g. subject) and transforms it to a signed JSON Web Token, and more specifically to an OpenID Connect ID Token. The API backends can verify the token by fetching the (public) key from the /.well-known/jwks.json endpoint provided by the Ory Oathkeeper API.
 
 ### Checking authorisation
 All authorisation information is maintained within Ory Keto. Ory Keto has a standard API that can be called to check authorisation. 
@@ -60,7 +60,7 @@ Here is a table of the services and the roles they are playing.
 | Service | Owns | Implements |
 | --- | --- |
 |**WSO2 IS KM**|Users| 1. User login redirection and UI that creates the cookie token <br>2. Standard OpenID Connect (OIDC) authorization code flow |
-|**Ory Keto**|1. The roles mapped to users <br> 2. The participant mapped to users| 1. API RBAC authorization check through Oathkeeper<br>2. API RBAC authorization check through operational API call|
+|**Ory Keto**|1. The roles mapped to users <br> 2. The participant mapped to users| 1. API RBAC authorization check through Ory Oathkeeper<br>2. API RBAC authorization check through operational API call|
 |**Ory Oathkeeper**|The permissions related to API access | API gateway for operational APIs with authentication and authorization checks|
 |**Ory Kratos**|Nothing|Authentication cookie|
 |**BC Operational API**|The permissions related to the operational API calls|Operational API functions|
@@ -70,16 +70,16 @@ Here is a table of the services and the roles they are playing.
 |**Roles API**|Nothing|1. Role-user API controls <br>(list of users, list of roles, list of roles assigned to users, add role to user, remove role from user)<br> 2. Participant-user API controls <br>(list of users, list of participants, list of participants assigned to user, add participant to user, remove participant from user)|
 
 ## How does this design align with the reference architecture?
-Let's compare this RBAC Operational API implementation to the security bounded context as defined in the reference architecture. This design differs from the reference architecture in function, purpose and approach, but where appropriate has adopted some of the design ideas. This RBAC implementation's purpose is to adds a layer for security onto the operational API's of the bounded contexts. The Reference Architecture's Security Bounded Context design has been designed to accommodate for the performance requirments of the critical transactional functions of Mojaloop. 
+Let's compare this RBAC Operational API implementation to the security bounded context as defined in the reference architecture. This design differs from the reference architecture in function, purpose and approach, but where appropriate has adopted some of the design ideas. This RBAC implementation's purpose is to adds a layer for security onto the operational API's of the bounded contexts. The Reference Architecture's Security Bounded Context design has been designed to accommodate for the performance requirements of the critical transactional functions of Mojaloop. 
 Here are the high level areas where these designs diverge:
-1. The authorisation functions are centralised in this RBAC implementation. The reference architecture design requires a distributed authorisation that is implmented in each bounded context independently. This extra level of complexity is unnessary for the operational API use case.
-1. The reference architecture design requires interfaces to other bounded contexts to initiate the distributed authorisation functionallity. These have not been built for the reason that there are no components that exist that could consume these interfaces. 
+1. The authorisation functions are centralised in this RBAC implementation. The reference architecture design requires a distributed authorisation that is implemented in each bounded context independently. This extra level of complexity is unnecessary for the operational API use case.
+1. The reference architecture design requires interfaces to other bounded contexts to initiate the distributed authorisation functionality. These have not been built for the reason that there are no components that exist that could consume these interfaces. 
 1. The reference architecture requires the security BC to generate it's own security tokens. This RBAC implementation uses the tokens that are generated by the IAM.
-1. The reference architecture requires the permissions to be distributed through the JWT to each bounded context. This is possible to configure in the current toolset, but was not. The reason being that some security experts consider this distribution of user permission sets a security vulerability, and it was not a requirement for this current RBAC implementation.
+1. The reference architecture requires the permissions to be distributed through the JWT to each bounded context. This is possible to configure in the current toolset, but was not. The reason being that some security experts consider this distribution of user permission sets a security vulnerability, and it was not a requirement for this current RBAC implementation.
 
 There are parts of the security bounded context that have been adopted in this RBAC Operational API implementation.
-1. Each Bounded context owns it's own set of permissions or privledges
-1. The RBAC implementation owns all the associations of privledges to users.
+1. Each Bounded context owns it's own set of permissions or privileges
+1. The RBAC implementation owns all the associations of privileges to users.
 1. The user Role Permissions are structured so that they are easily distributed within a Kubernetes cluster.
 
 ## Alignment with IaC 4.xxx
@@ -93,9 +93,9 @@ A performance characterisation of the RBAC POC implementation was performed in o
 The RBAC adds 10ms overhead for each API authorisation check per call. 
 If a particular API call requires and additional API based authorisation call, then the overhead is 20ms.
 
-This typically in our test queries ammounted to:
+This typically in our test queries amounted to:
 1. less than 5% for single authorisation checks (Ory Oathkeeper & Ory Keto), 
-1. and less than 10% for double authorisation checks (Ory Oathkeeper & Ory Keto and an aditional Ory Keto call).
+1. and less than 10% for double authorisation checks (Ory Oathkeeper & Ory Keto and an additional Ory Keto call).
 :::
 
 **Characterisation test setup details**
@@ -124,9 +124,9 @@ Below are the results of the test calls made to the role API with and without RB
 | |**Aggregated**|	**240**|	**250**|	**250**|	**260**|	**290**|	**320**|	**400**|	**500**|
 
 ## Logging into the UI
-This sequence diagram illustrates the events that occur when a brower attemps to access a backend API. 
+This sequence diagram illustrates the events that occur when a browser attempt to access a backend API. 
 - If the browser is already logged in, then the request is forwarded. 
-- If the brower is not logged in, then a standard OIDC authorization flow is triggered starting with a redirect.
+- If the browser is not logged in, then a standard OIDC authorization flow is triggered starting with a redirect.
 
 ![Sequence diagram illustrating how a brower logs in](../.vuepress/public/frontend.png) 
 
@@ -141,17 +141,17 @@ The micro-frontend is represented as a client.
 
 In some cases there might be a requirement for a more detailed authorization check to be performed by the operational API. The next sequence diagram describes how that is implemented.
 
-It is important to note that not all operational APIs will require this level of authorization, and that the Oathkeeper control may or may not be required in this use case.
+It is important to note that not all operational APIs will require this level of authorization, and that the Ory Oathkeeper control may or may not be required in this use case.
 
 ![Sequence diagram illustrating how an API client call has its authorization performed](../.vuepress/public/clientgraphql.png) 
 
 ## Enforcing Seperation of Duties
-This RBAC implemenation supports the enforcement of seperation of duties by the enforcement of mutually exclusive permissions sets. The implementation of separation of duty creates tighter security but can lead to complexity for the security administrator and the end users who use the system. Enforcing mutually exclusive permissions can reduce and help manage this complexity.
+This RBAC implementation supports the enforcement of separation of duties by the enforcement of mutually exclusive permissions sets. The implementation of separation of duty creates tighter security but can lead to complexity for the security administrator and the end users who use the system. Enforcing mutually exclusive permissions can reduce and help manage this complexity.
 
 An example of mutually exclusive permissions might be a user being able to access the Finance Portal and to carry out sensitive functions such as add/withdraw funds. This user should not also have access to audit functions.
 
 ### Modelling the exclusion
-This implementation models this requirment as a set of mutually exclusive permission - permission exclusions that are enforced globally. These exclusions are defined as two sets of permissions that are mutually exclusive which is intuitive and easy to maintain.
+This implementation models this requirements as a set of mutually exclusive permission - permission exclusions that are enforced globally. These exclusions are defined as two sets of permissions that are mutually exclusive which is intuitive and easy to maintain.
 
 *Justification*
 There are three possible ways that this exclusion could have been modelled namely:
@@ -179,7 +179,7 @@ There are a number of places that this dynamic check needs to take place.
 1. On the application of a new role-permission resource definition, or the application of a new security policy that may include a wholesale change of permission and role structures.
 ::: warning Future extension:
 If it is possible that a violation can exist in the system, then each time a permission is checked, exclusion violations should also be checked. Currently this is not designed for as it is assumed that 1 & 2 are sufficiently implemented that a violation cannot exist.
-It is recommended that this additional check be roadmapped for future extensions as this would ensure that no back-door override can be made to violate this seperation of duties.
+It is recommended that this additional check be roadmapped for future extensions as this would ensure that no back-door override can be made to violate this separation of duties.
 :::
 
 ::: tip Note: 
@@ -399,26 +399,26 @@ Mutally excluded permissions don't need to be check excplicitly through a Keto c
 :::
 
 ## Ory Oathkeeper – implementation detail
-### Configuring Oathkeeper for BizOps
+### Configuring Ory Oathkeeper for BizOps
 
-[ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/next/) authorizes incoming HTTP requests. It can be the Policy Enforcement Point in your cloud architecture, that is, a reverse proxy in front of your upstream API or web server that rejects unauthorized requests and forwards authorized ones to your server. If you want to use another API Gateway (Kong, Nginx, Envoy, AWS API Gateway, and so on), Oathkeeper can also plug into that and act as its Policy Decision Point.
-
-
-The Oathkeeper Helm chart is described at [ORY Oathkeeper Helm Chart | k8s](https://k8s.ory.sh/helm/oathkeeper.html) and defined in [k8s/helm/charts/oathkeeper at master · ory/k8s · GitHub](https://github.com/ory/k8s/tree/master/helm/charts/oathkeeper). The Ory Helm repository is documented at [ORY Helm Charts | k8s](https://k8s.ory.sh/helm/). The Oathkeeper configuration reference is at [Configuration | ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/reference/configuration) but note that the Helm chart values have different ways of doing certain things. Also, every configuration value can be overridden with environment variables. 
+[ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/next/) authorizes incoming HTTP requests. It can be the Policy Enforcement Point in your cloud architecture, that is, a reverse proxy in front of your upstream API or web server that rejects unauthorized requests and forwards authorized ones to your server. If you want to use another API Gateway (Kong, Nginx, Envoy, AWS API Gateway, and so on), Ory Oathkeeper can also plug into that and act as its Policy Decision Point.
 
 
-The Oathkeeper Helm chart deploys two key components into Kubernetes: Oathkeeper itself, and the Oathkeeper Maester. Oathkeeper is stateless and config-driven, and seamlessly reloads itself with zero downtime, anytime that config changes. Oathkeeper Maester is a controller for the Rule CRD, and composes the Rule objects in Kubernetes into a single complete rules file that is loaded by Oathkeeper.  By default, that is a ConfigMap that Oathkeeper mounts, but it can also be set to run as a sidecar and use a shared mount.
+The Ory Oathkeeper Helm chart is described at [ORY Oathkeeper Helm Chart | k8s](https://k8s.ory.sh/helm/oathkeeper.html) and defined in [k8s/helm/charts/oathkeeper at master · ory/k8s · GitHub](https://github.com/ory/k8s/tree/master/helm/charts/oathkeeper). The Ory Helm repository is documented at [ORY Helm Charts | k8s](https://k8s.ory.sh/helm/). The Ory Oathkeeper configuration reference is at [Configuration | ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/reference/configuration) but note that the Helm chart values have different ways of doing certain things. Also, every configuration value can be overridden with environment variables. 
 
 
-Oathkeeper exposes two ports as two services. One service is the API service, and the other is the Proxy service. Long-term, we will be using the API service, which will be queried by the next generation API Gateway using the Access Control Decision API  (see [REST API | ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/reference/api/#access-control-decision-api) ) that Oathkeeper provides, but for now we will be using the Proxy service, and exposing that via Ingress. External URLs to services protected by Oathkeeper will be pointed at  the Oathkeeper Proxy ingress, which will then proxy access to the internal services at those URLs and apply access control rules.
+The Ory Oathkeeper Helm chart deploys two key components into Kubernetes: Ory Oathkeeper itself, and the Ory Oathkeeper Maester. Ory Oathkeeper is stateless and config-driven, and seamlessly reloads itself with zero downtime, anytime that config changes. Ory Oathkeeper Maester is a controller for the Rule CRD, and composes the Rule objects in Kubernetes into a single complete rules file that is loaded by Ory Oathkeeper.  By default, that is a ConfigMap that Ory Oathkeeper mounts, but it can also be set to run as a sidecar and use a shared mount.
 
 
-Oathkeeper will be configured to generate and sign a JSON Web Token (JWT) containing claims that internal services can check and verify by pointing at the JSON Web Key Set (JWKS) that Oathkeeper will publish (which is part of the configuration) at the well-known URL for JWKS on the API service (see [REST API | ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/reference/api/#lists-cryptographic-keys) ). If a service does this, then it is operating under a basic zero trust regime, as it will not be possible to call that service except with a token that has been generated by Oathkeeper, and Oathkeeper will only generate a token if the access rules for the given URL allow access.
+Ory Oathkeeper exposes two ports as two services. One service is the API service, and the other is the Proxy service. Long-term, we will be using the API service, which will be queried by the next generation API Gateway using the Access Control Decision API  (see [REST API | ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/reference/api/#access-control-decision-api) ) that Ory Oathkeeper provides, but for now we will be using the Proxy service, and exposing that via Ingress. External URLs to services protected by Ory Oathkeeper will be pointed at the Ory Oathkeeper Proxy ingress, which will then proxy access to the internal services at those URLs and apply access control rules.
+
+
+Ory Oathkeeper will be configured to generate and sign a JSON Web Token (JWT) containing claims that internal services can check and verify by pointing at the JSON Web Key Set (JWKS) that Ory Oathkeeper will publish (which is part of the configuration) at the well-known URL for JWKS on the API service (see [REST API | ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/reference/api/#lists-cryptographic-keys) ). If a service does this, then it is operating under a basic zero trust regime, as it will not be possible to call that service except with a token that has been generated by Ory Oathkeeper, and Ory Oathkeeper will only generate a token if the access rules for the given URL allow access.
 
 
 
 ### Debugging
-The responses and logs from Oathkeeper tend to be pretty informative, so start there. Make sure you are looking at the logs for the request that matters. Oathkeeper will also be logging health checks and similar. 
+The responses and logs from Ory Oathkeeper tend to be pretty informative, so start there. Make sure you are looking at the logs for the request that matters. Ory Oathkeeper will also be logging health checks and similar. 
 
 
 Some possible debugging actions that have been found useful in different circumstances:
@@ -432,7 +432,7 @@ Some possible debugging actions that have been found useful in different circums
 
 * Make sure that the domains and ports for introspection and the external token endpoint are identical. Keycloak at least does not like it if they are not.
 
-* Point the Oathkeeper rule at https://httpbin.org/, usually the `/anything` path prefix which will reflect back everything it gets, making it easy to see what the service will see.
+* Point the Ory Oathkeeper rule at https://httpbin.org/, usually the `/anything` path prefix which will reflect back everything it gets, making it easy to see what the service will see.
 
 
 ### Components required in addition to a Helm chart
@@ -446,7 +446,7 @@ The following pieces will be needed in addition to the Helm chart:
 #### JWKS secret
 
 
-A secret should be created with key `mutator.id_token.jwks.json` and the value of a JWKS suitable for use with Oathkeeper. An initial one can be generated as described in [Configure and Deploy | ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/configure-deploy#cryptographic-keys). It will contain both public and private keys.
+A secret should be created with key `mutator.id_token.jwks.json` and the value of a JWKS suitable for use with Ory Oathkeeper. An initial one can be generated as described in [Configure and Deploy | ORY Oathkeeper](https://www.ory.sh/oathkeeper/docs/configure-deploy#cryptographic-keys). It will contain both public and private keys.
 
 
 ##### Operating with the JWKS secret
@@ -455,8 +455,8 @@ A secret should be created with key `mutator.id_token.jwks.json` and the value o
 To rotate the secret, apply the following procedure:
 
 0. Note the time.
-1. Add a public and private key pair to the beginning of the array in the JWKS (make sure all public JWKs have a specified unique `kid`) in the secret. All keys other than the new keys and the previous first public and private keys can be removed. This is because Oathkeeper always signs with the first key.
-2. Wait until all requests that Oathkeeper might have received and authorized would have had their JWT handled by the backend service. The main delay here is the time for the secret update to propagate, comprising the delay of the secret manager to the updated secret and the delay of the secret to the updated volume, which is probably at most a minute or two, so wait that long after the time in step 0.
+1. Add a public and private key pair to the beginning of the array in the JWKS (make sure all public JWKs have a specified unique `kid`) in the secret. All keys other than the new keys and the previous first public and private keys can be removed. This is because Ory Oathkeeper always signs with the first key.
+2. Wait until all requests that Ory Oathkeeper might have received and authorized would have had their JWT handled by the backend service. The main delay here is the time for the secret update to propagate, comprising the delay of the secret manager to the updated secret and the delay of the secret to the updated volume, which is probably at most a minute or two, so wait that long after the time in step 0.
 3. If the old secret is being removed (this is only necessary if a breach is suspected, otherwise step 1 is sufficient for periodic key rotation), remove it now.
 
 #### Annotated Helm values
@@ -466,7 +466,7 @@ Several places will need to be changed to the rest-of-deployment-specific URLs o
 
 How to setup the Proxy ingress is undecided at the time, as it will need to change when the solution is added to the IaC 3.xxx so that area of the config is still unspecified. This leaves the ingress out by default. Changing `ingress.proxy.enabled` to `true` will enable the proxy ingress. See the linked pages at the beginning for options  available for the built-in ingress configuration.
 
-If TLS needs to be terminated at Oathkeeper, see the `tls` sections in the [config documentation](https://www.ory.sh/oathkeeper/docs/reference/configuration), and combine that with secrets and the `deployment.extraVolumes` and `deployment.extraVolumeMounts` values.
+If TLS needs to be terminated at Ory Oathkeeper, see the `tls` sections in the [config documentation](https://www.ory.sh/oathkeeper/docs/reference/configuration), and combine that with secrets and the `deployment.extraVolumes` and `deployment.extraVolumeMounts` values.
 Prometheus is at `:9000/metrics` by default, if that is in use.
 
 
@@ -564,7 +564,7 @@ Rule resources will need to be created in Kubernetes for each backend "match" (U
 As the flexibility to define third-party services and bounded contexts increases, they can define their own rules (perhaps behind a Helm values flag), which express which permissions should be required for which URLs. 
 
 
-The biggest potential issue here is that each match MUST be unique. If a request matches multiple, Oathkeeper will complain. Once a general pattern is picked that results in unique regexes, this will not happen except with user error.
+The biggest potential issue here is that each match MUST be unique. If a request matches multiple, Ory Oathkeeper will complain. Once a general pattern is picked that results in unique regexes, this will not happen except with user error.
 
 ```yaml
 
@@ -609,7 +609,7 @@ spec:
     - handler: id_token
 
 ```
-### Configure Oathkeeper to use Kratos as its cookie Authenticator
+### Configure Ory Oathkeeper to use Kratos as its cookie Authenticator
 This part of the config above is applicable. Reference documentation for Ory Oathkeeper authenticators is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
 
 ```yaml
@@ -630,7 +630,7 @@ This part of the config above is applicable. Reference documentation for Ory Oat
 
 ```
 
-### Configure Oathkeeper to use WSO2 ISKM for token introspection
+### Configure Ory Oathkeeper to use WSO2 ISKM for token introspection
 Reference documentation is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authn).
 
 ```yaml
@@ -649,7 +649,7 @@ Reference documentation is found [here](https://www.ory.sh/oathkeeper/docs/next/
             ttl: "60s"
 ```
 
-### Configure Oathkeeper to use Keto as its authorizer
+### Configure Ory Oathkeeper to use Ory Keto as its authorizer
 This part of the config above is applicable.
 Reference documentation about Ory Oathkeeper authorizers is found [here](https://www.ory.sh/oathkeeper/docs/next/pipeline/authz).
 
@@ -679,7 +679,7 @@ It is useful to know that Kratos can also provided flows for:
   
 
 ### Deployment details
-The Kratos Helm Chart is described at [ORY Kratos Helm Chart | k8s](https://k8s.ory.sh/helm/kratos.html) and defined at [k8s/helm/charts/kratos at master · ory/k8s · GitHub](https://github.com/ory/k8s/tree/master/helm/charts/kratos). Unlike Oathkeeper, it does not have any related Maester handling a CRD. It does, however, need a database (which can be MySQL, PostgreSQL, CockroachDB, or a few others). The Helm repository is the same as for Oathkeeper, and documented at [ORY Helm Charts | k8s](https://k8s.ory.sh/helm/). A configuration reference is at [Configuration | Ory Kratos](https://www.ory.sh/kratos/docs/reference/configuration), but note that the Helm chart works slightly differently.
+The Kratos Helm Chart is described at [ORY Kratos Helm Chart | k8s](https://k8s.ory.sh/helm/kratos.html) and defined at [k8s/helm/charts/kratos at master · ory/k8s · GitHub](https://github.com/ory/k8s/tree/master/helm/charts/kratos). Unlike Ory Oathkeeper, it does not have any related Maester handling a CRD. It does, however, need a database (which can be MySQL, PostgreSQL, CockroachDB, or a few others). The Helm repository is the same as for Ory Oathkeeper, and documented at [ORY Helm Charts | k8s](https://k8s.ory.sh/helm/). A configuration reference is at [Configuration | Ory Kratos](https://www.ory.sh/kratos/docs/reference/configuration), but note that the Helm chart works slightly differently.
 
 
 In addition to a database, the other major difference for Kratos is that it requires a user interface, in the form of a small web application that handles rendering the current stage of what’s happening with Kratos to the browser and also doing the necessary backend communication to make that happen securely. In our case, the UI we’ll use is very simple, and is never actually visible—all it will do is immediately forward to the one OIDC Identity Provider (IdP) we’ll have configured and receive the related callback. This UI application has already been created and open sourced in the `modusbox` repository, and releases public docker images in the GitHub docker registry. The UI can be found at [GitHub - modusbox/kratos-ui-oidcer: A Kratos UI for forwarding immediately to a single configured OIDC provider](https://github.com/modusbox/kratos-ui-oidcer), and is a very minimal Rust application with excellent test coverage and a tiny docker image (about 5 megabytes, https://github.com/modusbox/kratos-ui-oidcer/pkgs/container/oidcer ). It is referred to as 'Shim' in the above design documentation.
